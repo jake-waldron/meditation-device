@@ -15,7 +15,6 @@ async function main() {
 		protocolTimeout: 60000 * 10, // set 10 min timeout
 	});
 	const page = await browser.newPage();
-	page.setDefaultTimeout(0);
 
 	// Go to the headspace website
 	await page.goto('https://my.headspace.com/modes/meditate');
