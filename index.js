@@ -1,14 +1,11 @@
 import puppeteer from 'puppeteer';
 import 'dotenv/config';
 
-function getTime(text) {
-	const raw = text.split(':');
-	const minutes = parseInt(raw[0]);
-	const seconds = parseInt(raw[1]);
-	return minutes * 60000 + seconds * 1000;
+function delay(seconds) {
+	return new Promise((r) => setTimeout(r, seconds * 1000));
 }
 
-async function main() {
+async function runAutomation() {
 	const browser = await puppeteer.launch({
 		headless: false,
 		executablePath: process.env.CHROME_DIR,
@@ -19,33 +16,45 @@ async function main() {
 	// Go to the headspace website
 	await page.goto('https://my.headspace.com/modes/meditate');
 
-	// if not logged in already, log in
+	// If not logged in already, log in
 	if (page.$('h3 ::-p-text(Log in)')) {
 		await page.type('input[aria-labelledby="email-label"]', process.env.USERNAME);
 		await page.type('input[aria-labelledby="password-label"]', process.env.PASSWORD);
-		console.log('clicking button');
 		const logInButton = await page.$('button[data-testid="submit-login-btn"]');
 		logInButton.click();
 	}
 
-	// Find the link to today's meditation based on the css class and click it
+	// Finds the link to today's meditation based on the css class and clicks it
 	const anchor = await page.waitForSelector('.css-s0vuju');
 	await anchor.click();
 
-	// Find the "Play" button and click it
+	// Finds the "Play" button and clicks it
 	const playButton = await page.waitForSelector('button[aria-label="Play"]');
-	const timeElement = await page.waitForSelector('.css-gg4vpm > p:last-child');
-	const timeText = await (await timeElement.getProperty('textContent')).jsonValue();
-	const timeout = getTime(timeText);
-
 	await playButton.click();
 
-	// Wait until the audio finishes playing (button label turns to "Pause" while audio is playing)
-	await page.waitForSelector('button[aria-label="Play"]', { timeout: timeout });
-	console.log('Audio playback finished!');
+	// Waits for the time to update
+	await page.waitForFunction(() => {
+		const timeElement = document.querySelector('.css-gg4vpm > p:last-child');
+		return timeElement && timeElement.textContent !== '0:00';
+	});
 
-	// Close the browser
+	// Gets the time elements and their text contents
+	const totalTimeElement = await page.waitForSelector('.css-gg4vpm > p:last-child');
+	const totalTime = await (await totalTimeElement.getProperty('textContent')).jsonValue();
+
+	const currentTimeElement = await page.waitForSelector('.css-gg4vpm > p:first-child');
+	let currentTime = await (await currentTimeElement.getProperty('textContent')).jsonValue();
+
+	console.log({ currentTime, totalTime });
+
+	// if current play time doesn't match the total time, check every second
+	while (currentTime !== totalTime) {
+		await delay(1);
+		console.log('checking time');
+		currentTime = await (await currentTimeElement.getProperty('textContent')).jsonValue();
+	}
+
 	await browser.close();
 }
 
-main();
+runAutomation();
