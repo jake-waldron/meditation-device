@@ -28,6 +28,16 @@ async function runAutomation() {
 	const anchor = await page.waitForSelector('.css-s0vuju');
 	await anchor.click();
 
+	// Open settings and set the length to length set in .env
+	const settingsButton = await page.waitForSelector('button[aria-label="Open Player Settings"]');
+	await settingsButton.click();
+
+	const lengthButton = await page.waitForSelector('label[for="4389"]');
+	await lengthButton.click();
+
+	const closeButton = await page.waitForSelector('button[aria-label="Close Player Settings"]');
+	await closeButton.click();
+
 	// Finds the "Play" button and clicks it
 	const playButton = await page.waitForSelector('button[aria-label="Play"]');
 	await playButton.click();
