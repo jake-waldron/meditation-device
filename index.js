@@ -32,15 +32,22 @@ async function runAutomation() {
 	const settingsButton = await page.waitForSelector('button[aria-label="Open Player Settings"]');
 	await settingsButton.click();
 
-	const lengthButton = await page.waitForSelector('label[for="4389"]');
-	await lengthButton.click();
+	const label = await page.waitForFunction(() => {
+		const labels = [...document.querySelectorAll('label')];
+		return labels.find((label) => label.textContent === '10');
+	});
+
+	await label.click();
+
+	// const lengthButton = await page.waitForSelector('label[for="4389"]');
+	// await lengthButton.click();
 
 	const closeButton = await page.waitForSelector('button[aria-label="Close Player Settings"]');
 	await closeButton.click();
 
-	// Finds the "Play" button and clicks it
-	const playButton = await page.waitForSelector('button[aria-label="Play"]');
-	await playButton.click();
+	// // Finds the "Play" button and clicks it
+	// const playButton = await page.waitForSelector('button[aria-label="Play"]');
+	// await playButton.click();
 
 	// Waits for the time to update
 	await page.waitForFunction(() => {
@@ -56,6 +63,10 @@ async function runAutomation() {
 	let currentTime = await (await currentTimeElement.getProperty('textContent')).jsonValue();
 
 	console.log({ currentTime, totalTime });
+
+	// Finds the "Play" button and clicks it
+	const playButton = await page.waitForSelector('button[aria-label="Play"]');
+	await playButton.click();
 
 	// if current play time doesn't match the total time, check every second
 	while (currentTime !== totalTime) {
