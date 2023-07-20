@@ -1,6 +1,8 @@
 import puppeteer from 'puppeteer';
 import 'dotenv/config';
 
+const desiredLength = '10';
+
 function delay(seconds) {
 	return new Promise((r) => setTimeout(r, seconds * 1000));
 }
@@ -24,9 +26,12 @@ async function runAutomation() {
 		logInButton.click();
 	}
 
+	await page.waitForNavigation({ waitUntil: 'networkidle2' });
+
 	// Finds the link to today's meditation based on the css class and clicks it
-	const anchor = await page.waitForSelector('.css-s0vuju');
-	await anchor.click();
+	await page.evaluate(() => {
+		document.querySelector('.css-s0vuju').click();
+	});
 
 	// Open settings and set the length to length set in .env
 	const settingsButton = await page.waitForSelector('button[aria-label="Open Player Settings"]');
@@ -39,15 +44,8 @@ async function runAutomation() {
 
 	await label.click();
 
-	// const lengthButton = await page.waitForSelector('label[for="4389"]');
-	// await lengthButton.click();
-
 	const closeButton = await page.waitForSelector('button[aria-label="Close Player Settings"]');
 	await closeButton.click();
-
-	// // Finds the "Play" button and clicks it
-	// const playButton = await page.waitForSelector('button[aria-label="Play"]');
-	// await playButton.click();
 
 	// Waits for the time to update
 	await page.waitForFunction(() => {
@@ -64,9 +62,12 @@ async function runAutomation() {
 
 	console.log({ currentTime, totalTime });
 
-	// Finds the "Play" button and clicks it
-	const playButton = await page.waitForSelector('button[aria-label="Play"]');
-	await playButton.click();
+	await delay(0.5);
+
+	// // Finds the "Play" button and clicks it
+	await page.evaluate(() => {
+		document.querySelector('button[aria-label="Play"').click();
+	});
 
 	// if current play time doesn't match the total time, check every second
 	while (currentTime !== totalTime) {
