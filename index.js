@@ -24,27 +24,25 @@ async function runAutomation() {
 		logInButton.click();
 	}
 
-	await page.waitForNavigation({ waitUntil: 'networkidle2' });
+	await page.waitForNavigation({ waitUntil: 'networkidle0' });
 
-	// Finds the link to today's meditation based on the css class and clicks it
-	await page.evaluate(() => {
-		// document.querySelector('.css-s0vuju').click();
-		document.querySelector('a[href^="/player/"]').click();
-	});
+	// Finds the link to today's meditation and clicks it
+	await page.$eval('a[href^="/player/"]', (el) => el.click());
 
-	// Open settings and set the length to 10 minutes
+	// Open settings and set the length to time set in .env
 	const settingsButton = await page.waitForSelector('button[aria-label="Open Player Settings"]');
 	await settingsButton.click();
 
-	const label = await page.waitForFunction(() => {
-		const labels = [...document.querySelectorAll('label')];
-		return labels.find((label) => label.textContent === '10');
-	});
+	await page.$$eval(
+		'label',
+		(labels, length) => {
+			const label = labels.find((label) => label.textContent === length);
+			return label.click();
+		},
+		process.env.LENGTH
+	);
 
-	await label.click();
-
-	const closeButton = await page.$('button[aria-label="Close Player Settings"]');
-	await closeButton.click();
+	await page.$eval('button[aria-label="Close Player Settings"]', (el) => el.click());
 
 	// Waits for the time to update
 	await page.waitForFunction(() => {
@@ -71,9 +69,7 @@ async function runAutomation() {
 	await delay(0.5);
 
 	// // Finds the "Play" button and clicks it
-	await page.evaluate(() => {
-		document.querySelector('button[aria-label="Play"').click();
-	});
+	await page.$eval('button[aria-label="Play"]', (el) => el.click());
 
 	// if current play time doesn't match the total time, check every second
 	while (currentTime !== totalTime) {
@@ -84,6 +80,8 @@ async function runAutomation() {
 			(el) => el.textContent
 		);
 	}
+
+	await delay(1);
 
 	await browser.close();
 }
