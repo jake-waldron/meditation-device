@@ -1,8 +1,6 @@
 import puppeteer from 'puppeteer';
 import 'dotenv/config';
 
-const desiredLength = '10';
-
 function delay(seconds) {
 	return new Promise((r) => setTimeout(r, seconds * 1000));
 }
@@ -30,10 +28,11 @@ async function runAutomation() {
 
 	// Finds the link to today's meditation based on the css class and clicks it
 	await page.evaluate(() => {
-		document.querySelector('.css-s0vuju').click();
+		// document.querySelector('.css-s0vuju').click();
+		document.querySelector('a[href^="/player/"]').click();
 	});
 
-	// Open settings and set the length to length set in .env
+	// Open settings and set the length to 10 minutes
 	const settingsButton = await page.waitForSelector('button[aria-label="Open Player Settings"]');
 	await settingsButton.click();
 
@@ -44,21 +43,28 @@ async function runAutomation() {
 
 	await label.click();
 
-	const closeButton = await page.waitForSelector('button[aria-label="Close Player Settings"]');
+	const closeButton = await page.$('button[aria-label="Close Player Settings"]');
 	await closeButton.click();
 
 	// Waits for the time to update
 	await page.waitForFunction(() => {
-		const timeElement = document.querySelector('.css-gg4vpm > p:last-child');
+		const timeElement = document.querySelector(
+			'div[data-testid="audio-player-scrubber-container"] + div > p:last-child'
+		);
+		console.log(timeElement);
 		return timeElement && timeElement.textContent !== '0:00';
 	});
 
 	// Gets the time elements and their text contents
-	const totalTimeElement = await page.waitForSelector('.css-gg4vpm > p:last-child');
-	const totalTime = await (await totalTimeElement.getProperty('textContent')).jsonValue();
+	const totalTime = await page.$eval(
+		'div[data-testid="audio-player-scrubber-container"] + div > p:last-child',
+		(el) => el.textContent
+	);
 
-	const currentTimeElement = await page.waitForSelector('.css-gg4vpm > p:first-child');
-	let currentTime = await (await currentTimeElement.getProperty('textContent')).jsonValue();
+	let currentTime = await page.$eval(
+		'div[data-testid="audio-player-scrubber-container"] + div > p:first-child',
+		(el) => el.textContent
+	);
 
 	console.log({ currentTime, totalTime });
 
@@ -73,7 +79,10 @@ async function runAutomation() {
 	while (currentTime !== totalTime) {
 		await delay(1);
 		console.log('checking time');
-		currentTime = await (await currentTimeElement.getProperty('textContent')).jsonValue();
+		currentTime = await page.$eval(
+			'div[data-testid="audio-player-scrubber-container"] + div > p:first-child',
+			(el) => el.textContent
+		);
 	}
 
 	await browser.close();
