@@ -33,9 +33,8 @@ def get_client_id():
 
 
 def get_credentials():
-    env = dotenv_values(".env.local")
-    email = env.get("USERNAME")
-    password = env.get("PASSWORD")
+    email = input("Username: ")
+    password = input("Password: ")
     return email, password
 
 
@@ -86,9 +85,19 @@ def authenticate(email, password):
     return bearer_token
 
 
+def create_env_file():
+    if not os.path.exists(".env.local"):
+        with open(".env.local", "w") as env_file:
+            env_file.write("")
+
+
 email, password = get_credentials()
 bearer_token = authenticate(email, password)
 
+create_env_file()
+
 if bearer_token:
+    set_key(".env.local", "USERNAME", email)
+    set_key(".env.local", "PASSWORD", password)
     set_key(".env.local", "BEARER_TOKEN", bearer_token)
-    print("Bearer Token added to .env.local file.")
+    print("Username, Password, and Bearer Token added to .env.local file.")
