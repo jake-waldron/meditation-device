@@ -3,13 +3,14 @@ import dotenv from 'dotenv';
 
 import playMP3FromURL from './audio.js';
 
-dotenv.config();
+dotenv.config({ path: './.env.local' });
 
 const everydayURL = 'https://api.prod.headspace.com/content/view-models/everyday-headspace-banner';
 const DESIRED_LANGUAGE = 'en-US';
 const BEARER_TOKEN = process.env.BEARER_TOKEN;
 const LENGTH = `${process.env.LENGTH}min`;
 
+console.log(BEARER_TOKEN);
 const headers = {
 	authority: 'api.prod.headspace.com',
 	accept: 'application/vnd.api+json',
