@@ -35,7 +35,8 @@ def get_client_id():
 def get_credentials():
     email = input("Username: ")
     password = input("Password: ")
-    return email, password
+    length = input("Desired meditiation length (3, 5, 10, 15, 20): ")
+    return email, password, length
 
 
 def get_bearer_token(client_id, login_ticket):
@@ -91,7 +92,7 @@ def create_env_file():
             env_file.write("")
 
 
-email, password = get_credentials()
+email, password, length = get_credentials()
 bearer_token = authenticate(email, password)
 
 create_env_file()
@@ -99,5 +100,6 @@ create_env_file()
 if bearer_token:
     set_key(".env.local", "USERNAME", email)
     set_key(".env.local", "PASSWORD", password)
+    set_key(".env.local", "LENGTH", length)
     set_key(".env.local", "BEARER_TOKEN", bearer_token)
     print("Username, Password, and Bearer Token added to .env.local file.")
