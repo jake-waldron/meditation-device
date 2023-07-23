@@ -9,7 +9,7 @@ dotenv.config({ path: './.env.local' });
 const everydayURL = 'https://api.prod.headspace.com/content/view-models/everyday-headspace-banner';
 const DESIRED_LANGUAGE = 'en-US';
 const BEARER_TOKEN = process.env.BEARER_TOKEN;
-const LENGTH = `${process.env.LENGTH}min`;
+const LENGTH = `${process.env.LENGTH}min` || '10min';
 
 const headers = {
 	authority: 'api.prod.headspace.com',
@@ -65,6 +65,7 @@ export default async function playTodaysMeditation(system) {
 	const meditation = sessions.find(
 		(session) => session.type === 'mediaItems' && session.attributes?.filename.includes(LENGTH)
 	);
+
 	const signId = meditation.id;
 	const signUrl = `https://api.prod.headspace.com/content/media-items/${signId}/make-signed-url`;
 	const mp3Url = await getMp3Url(signUrl);
