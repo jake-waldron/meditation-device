@@ -10,7 +10,6 @@ const DESIRED_LANGUAGE = 'en-US';
 const BEARER_TOKEN = process.env.BEARER_TOKEN;
 const LENGTH = `${process.env.LENGTH}min`;
 
-console.log(BEARER_TOKEN);
 const headers = {
 	authority: 'api.prod.headspace.com',
 	accept: 'application/vnd.api+json',
