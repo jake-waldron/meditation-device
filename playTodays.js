@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 import playMP3FromURL from './audio.js';
+import playMp3RaspPi from './raspPi.js';
 
 dotenv.config({ path: './.env.local' });
 
@@ -37,7 +38,7 @@ function getUserId() {
 	return '';
 }
 
-export default async function playTodaysMeditation() {
+export default async function playTodaysMeditation(system) {
 	const USER_ID = getUserId();
 	if (!USER_ID) {
 		console.log('No valid USER_ID found. Make sure the BEARER_TOKEN is properly set.');
@@ -67,7 +68,11 @@ export default async function playTodaysMeditation() {
 	const signId = meditation.id;
 	const signUrl = `https://api.prod.headspace.com/content/media-items/${signId}/make-signed-url`;
 	const mp3Url = await getMp3Url(signUrl);
-	playMP3FromURL(mp3Url);
+	if (system === 'macOS') {
+		playMP3FromURL(mp3Url);
+	} else if (system === 'raspPi') {
+		playMp3RaspPi(mp3Url);
+	}
 }
 
 async function getMp3Url(signedUrl) {

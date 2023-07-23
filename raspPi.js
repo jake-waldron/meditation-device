@@ -2,9 +2,9 @@
 
 // sudo apt-get update
 // sudo apt-get install bluealsa bluez-alsa
-const fs = require('fs');
-const https = require('https');
-const { exec } = require('child_process');
+import fs from 'fs';
+import https from 'https';
+import { exec } from 'child_process';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 const checkBluetoothConnection = (deviceName) => {
@@ -21,7 +21,7 @@ const checkBluetoothConnection = (deviceName) => {
 };
 
 // Function to play the MP3 file from the given URL
-const playMP3FromURL = async (mp3URL) => {
+export default async function playMp3RaspPi(mp3URL) {
 	// Generate a unique file name for the downloaded MP3 file
 	const mp3FileName = `temp_${Date.now()}.mp3`;
 
@@ -60,9 +60,4 @@ const playMP3FromURL = async (mp3URL) => {
 		.on('error', (error) => {
 			console.error('Failed to download MP3 file:', error);
 		});
-};
-
-// Usage example:
-const mp3URL =
-	'https://d3jyalop6jpmn2.cloudfront.net/private/encoded/pack-evdh-mind-s255-3min-g-en__1524523865976_vbr_1ch_high_quality_mp3.mp3?Policy=eyJTdGF0ZW1lbnQiOlt7IlJlc291cmNlIjoiaHR0cHM6Ly9kM2p5YWxvcDZqcG1uMi5jbG91ZGZyb250Lm5ldC9wcml2YXRlL2VuY29kZWQvcGFjay1ldmRoLW1pbmQtczI1NS0zbWluLWctZW5fXzE1MjQ1MjM4NjU5NzZfdmJyXzFjaF9oaWdoX3F1YWxpdHlfbXAzLm1wMyIsIkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTY5MDEyMzE5N319fV19&Key-Pair-Id=APKAJU742EIY3FZWPVSA&Signature=fQFaiSFaizPzmZeKaZUutoz8TVAM-DVAeUdbNNVXWbhWtM87WYW-5dL8O3Bd6BSyyURtFGCbA-eiUaneZSqCf~Gb1632~To6HuZcgm6HUPN5V14PGllhffh8pAsO5u2SiEXw2FfNU6AgGFrP0rMz9HGJEt92Pdk~OeCXfBzIiJGYLPRcBZGaPPhI-XRejKMcr6wIvy85NoP4z9BeYYC9b1Uja0Kd3Z4gbCaulhsWodCqxCj9bGcU8Vudya3paA8xQHpbZmhWd~sku1pztadyK0f-n7OCl4JKiWUWLipbluP9pWbfjdBPESOCYZC-K1JINxadpvLK4TRKCZ1mMe4GxA__';
-playMP3FromURL(mp3URL);
+}
