@@ -1,5 +1,8 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import https from 'https';
+
+dotenv.config({ path: './.env.local' });
+
 const LOGIN_URL = 'https://www.headspace.com/login';
 const AUTH_URL = 'https://auth.headspace.com/co/authenticate';
 const BEARER_TOKEN_URL = 'https://auth.headspace.com/authorize';
@@ -42,10 +45,13 @@ async function get_bearer_token(client_id, login_ticket) {
 	});
 
 	const url = new URL(BEARER_TOKEN_URL);
+	// url.username = process.env.USERNAME;
+	// url.password = process.env.PASSWORD;
 	url.search = new URLSearchParams(params).toString();
+	console.log(url);
 
 	const response = await fetch(url, { headers });
-
+	console.log(response);
 	// const response = await fetch(`${BEARER_TOKEN_URL}?${params}`, fetchOptions);
 	const body = await response.text();
 	console.log(body);
@@ -74,7 +80,7 @@ async function authenticate(email, password) {
 		if (resp_json.hasOwnProperty('error')) {
 			console.log(resp_json['error']);
 			if (resp_json.hasOwnProperty('error_description')) {
-				console.log(resp_json['error_description']);
+				console.log('*****', resp_json['error_description']);
 			}
 		} else {
 			console.log(resp_json);
