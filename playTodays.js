@@ -61,6 +61,7 @@ export default async function playTodaysMeditation(system) {
 
 	const data = await response.json();
 	const sessions = data.included;
+	console.log(sessions);
 
 	const meditation = sessions.find(
 		(session) => session.type === 'mediaItems' && session.attributes?.filename.includes(`${LENGTH}min`)
