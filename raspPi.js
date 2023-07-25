@@ -58,6 +58,16 @@ export default async function playMp3RaspPi(mp3URL) {
 
 					console.log('Audio streamed successfully!');
 					// Call your next function or perform additional tasks here
+					fs.unlink(mp3FileName, (error) => {
+						if (error) {
+							console.error('Failed to delete MP3 file:', error);
+							return;
+						}
+						console.log('MP3 file deleted!');
+						return new Promise((resolve, reject) => {
+							resolve();
+						});
+					});
 				});
 			});
 
