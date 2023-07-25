@@ -26,42 +26,89 @@ export default async function playMp3RaspPi(mp3URL) {
 	const mp3FileName = `temp_${Date.now()}.mp3`;
 
 	const file = fs.createWriteStream(mp3FileName);
-	https
-		.get(mp3URL, async (response) => {
-			response.pipe(file);
-			console.log('MP3 file downloaded successfully!');
 
-			const bluetoothDeviceName = 'WH-1000XM4';
-			const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
+	https.get(mp3URL, async (response) => {
+		response.pipe(file);
+		console.log('MP3 file downloaded successfully!');
 
-			if (!isConnected) {
-				console.error('Not connected to the correct Bluetooth headphones!');
-				return;
-			}
+		const bluetoothDeviceName = 'WH-1000XM4';
+		const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
 
-			// Stream the MP3 file to Bluetooth headphones
-			// exec(`aplay --profile a2dp ${mp3FileName}`, (error) => {
-			exec(`mpg321 -g 50  ${mp3FileName}`, (error) => {
+		if (!isConnected) {
+			console.error('Not connected to the correct Bluetooth headphones!');
+			return;
+		}
+
+		file.on('finish', () => {
+			console.log('File download completed successfully!');
+
+			const { exec } = require('child_process');
+
+			const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
 				if (error) {
 					console.error('Failed to stream audio:', error);
 					return;
 				}
-				console.log('Audio streamed successfully!');
-
-				// Delete the MP3 file after playing
-				fs.unlink(mp3FileName, (error) => {
-					if (error) {
-						console.error('Failed to delete MP3 file:', error);
-						return;
-					}
-					console.log('MP3 file deleted!');
-					return new Promise((resolve, reject) => {
-						resolve();
-					});
-				});
 			});
-		})
-		.on('error', (error) => {
-			console.error('Failed to download MP3 file:', error);
+
+			child.on('close', (code) => {
+				if (code !== 0) {
+					console.error('Audio playback failed with exit code:', code);
+					return;
+				}
+
+				console.log('Audio streamed successfully!');
+				// Call your next function or perform additional tasks here
+			});
 		});
+
+		// Handle any errors during download
+		file.on('error', (error) => {
+			console.error('Error downloading file:', error);
+		});
+	});
+
+	// Handle any errors during the HTTP request
+	https.on('error', (error) => {
+		console.error('Error downloading MP3:', error);
+	});
+
+	// https
+	// 	.get(mp3URL, async (response) => {
+	// 		response.pipe(file);
+	// 		console.log('MP3 file downloaded successfully!');
+
+	// 		const bluetoothDeviceName = 'WH-1000XM4';
+	// 		const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
+
+	// 		if (!isConnected) {
+	// 			console.error('Not connected to the correct Bluetooth headphones!');
+	// 			return;
+	// 		}
+
+	// 		// Stream the MP3 file to Bluetooth headphones
+	// 		// exec(`aplay --profile a2dp ${mp3FileName}`, (error) => {
+	// 		exec(`mpg321 -g 50  ${mp3FileName}`, (error) => {
+	// 			if (error) {
+	// 				console.error('Failed to stream audio:', error);
+	// 				return;
+	// 			}
+	// 			console.log('Audio streamed successfully!');
+
+	// 			// Delete the MP3 file after playing
+	// 			fs.unlink(mp3FileName, (error) => {
+	// 				if (error) {
+	// 					console.error('Failed to delete MP3 file:', error);
+	// 					return;
+	// 				}
+	// 				console.log('MP3 file deleted!');
+	// 				return new Promise((resolve, reject) => {
+	// 					resolve();
+	// 				});
+	// 			});
+	// 		});
+	// 	})
+	// 	.on('error', (error) => {
+	// 		console.error('Failed to download MP3 file:', error);
+	// 	});
 }
