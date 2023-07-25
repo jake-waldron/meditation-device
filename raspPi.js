@@ -8,7 +8,7 @@ import { exec } from 'child_process';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 const checkBluetoothConnection = (deviceName) => {
-	exec('bluetoothctl connect F8:4E:17:C4:75:6E');
+	exec(`bluetoothctl connect ${process.env.DEVICE_ID}`);
 	return new Promise((resolve, reject) => {
 		exec('bluetoothctl devices', (error, stdout, stderr) => {
 			if (error) {
@@ -82,43 +82,4 @@ export default async function playMp3RaspPi(mp3URL) {
 		.on('error', (error) => {
 			console.error('Error downloading MP3:', error);
 		});
-
-	// https
-	// 	.get(mp3URL, async (response) => {
-	// 		response.pipe(file);
-	// 		console.log('MP3 file downloaded successfully!');
-
-	// 		const bluetoothDeviceName = 'WH-1000XM4';
-	// 		const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
-
-	// 		if (!isConnected) {
-	// 			console.error('Not connected to the correct Bluetooth headphones!');
-	// 			return;
-	// 		}
-
-	// 		// Stream the MP3 file to Bluetooth headphones
-	// 		// exec(`aplay --profile a2dp ${mp3FileName}`, (error) => {
-	// 		exec(`mpg321 -g 50  ${mp3FileName}`, (error) => {
-	// 			if (error) {
-	// 				console.error('Failed to stream audio:', error);
-	// 				return;
-	// 			}
-	// 			console.log('Audio streamed successfully!');
-
-	// 			// Delete the MP3 file after playing
-	// 			fs.unlink(mp3FileName, (error) => {
-	// 				if (error) {
-	// 					console.error('Failed to delete MP3 file:', error);
-	// 					return;
-	// 				}
-	// 				console.log('MP3 file deleted!');
-	// 				return new Promise((resolve, reject) => {
-	// 					resolve();
-	// 				});
-	// 			});
-	// 		});
-	// 	})
-	// 	.on('error', (error) => {
-	// 		console.error('Failed to download MP3 file:', error);
-	// 	});
 }
