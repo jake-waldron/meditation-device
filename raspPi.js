@@ -40,7 +40,8 @@ export default async function playMp3RaspPi(mp3URL) {
 			}
 
 			// Stream the MP3 file to Bluetooth headphones
-			exec(`aplay --profile a2dp ${mp3FileName}`, (error) => {
+			// exec(`aplay --profile a2dp ${mp3FileName}`, (error) => {
+			exec(`aplay  ${mp3FileName}`, (error) => {
 				if (error) {
 					console.error('Failed to stream audio:', error);
 					return;
