@@ -3,13 +3,14 @@ import dotenv from 'dotenv';
 
 import playMP3FromURL from './audio.js';
 import playMp3RaspPi from './raspPi.js';
+import { parse } from 'dotenv';
 
 dotenv.config({ path: './.env.local' });
 
 const everydayURL = 'https://api.prod.headspace.com/content/view-models/everyday-headspace-banner';
 const DESIRED_LANGUAGE = 'en-US';
 const BEARER_TOKEN = process.env.BEARER_TOKEN;
-const LENGTH = `${process.env.LENGTH}min` || '10min';
+const LENGTH = parseInt(process.env.LENGTH);
 
 const headers = {
 	authority: 'api.prod.headspace.com',
@@ -38,6 +39,33 @@ function getUserId() {
 	return '';
 }
 
+function getDuration(time) {
+	const orig_duration = time / 60000;
+
+	let minutes = Math.floor(time / 60000);
+	let unit_place = minutes % 10;
+
+	if (0 < unit_place && unit_place < 5) {
+		minutes -= unit_place;
+	} else if (unit_place > 5) {
+		minutes -= unit_place - 5;
+	}
+
+	if (minutes === 0) {
+		if (orig_duration >= 2 && orig_duration < 3) {
+			minutes = 2;
+		} else if (orig_duration >= 3 && orig_duration < 4) {
+			minutes = 3;
+		} else if (orig_duration >= 4 && orig_duration <= 5) {
+			minutes = 5;
+		} else {
+			minutes = 1;
+		}
+	}
+
+	return minutes;
+}
+
 export default async function playTodaysMeditation(system) {
 	const USER_ID = getUserId();
 	if (!USER_ID) {
@@ -64,7 +92,7 @@ export default async function playTodaysMeditation(system) {
 	console.log(sessions);
 
 	const meditation = sessions.find(
-		(session) => session.type === 'mediaItems' && session.attributes?.filename.includes(`${LENGTH}min`)
+		(session) => session.type === 'mediaItems' && getDuration(session.attributes?.durationInMs) === LENGTH
 	);
 
 	const signId = meditation.id;
