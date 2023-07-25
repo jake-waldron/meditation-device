@@ -63,7 +63,7 @@ export default async function playTodaysMeditation(system) {
 	const sessions = data.included;
 
 	const meditation = sessions.find(
-		(session) => session.type === 'mediaItems' && session.attributes?.filename.includes(LENGTH)
+		(session) => session.type === 'mediaItems' && session.attributes?.filename.includes(`${LENGTH}min`)
 	);
 
 	const signId = meditation.id;
