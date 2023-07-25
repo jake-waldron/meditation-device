@@ -55,6 +55,9 @@ export default async function playMp3RaspPi(mp3URL) {
 						return;
 					}
 					console.log('MP3 file deleted!');
+					return new Promise((resolve, reject) => {
+						resolve();
+					});
 				});
 			});
 		})
