@@ -43,8 +43,6 @@ export default async function playMp3RaspPi(mp3URL) {
 			file.on('finish', () => {
 				console.log('File download completed successfully!');
 
-				const { exec } = require('child_process');
-
 				const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
 					if (error) {
 						console.error('Failed to stream audio:', error);
