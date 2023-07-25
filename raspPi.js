@@ -37,6 +37,7 @@ export default async function playMp3RaspPi(mp3URL) {
 
 			if (!isConnected) {
 				console.error('Not connected to the correct Bluetooth headphones!');
+				exec('bluetoothctl connect F8:4E:17:C4:75:6E');
 				return;
 			}
 
@@ -64,6 +65,7 @@ export default async function playMp3RaspPi(mp3URL) {
 							return;
 						}
 						console.log('MP3 file deleted!');
+						exec('bluetoothctl disconnect');
 						return new Promise((resolve, reject) => {
 							resolve();
 						});
