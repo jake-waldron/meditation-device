@@ -27,51 +27,50 @@ export default async function playMp3RaspPi(mp3URL) {
 
 	const file = fs.createWriteStream(mp3FileName);
 
-	https.get(mp3URL, async (response) => {
-		response.pipe(file);
-		console.log('MP3 file downloaded successfully!');
+	https
+		.get(mp3URL, async (response) => {
+			response.pipe(file);
+			console.log('MP3 file downloaded successfully!');
 
-		const bluetoothDeviceName = 'WH-1000XM4';
-		const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
+			const bluetoothDeviceName = 'WH-1000XM4';
+			const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
 
-		if (!isConnected) {
-			console.error('Not connected to the correct Bluetooth headphones!');
-			return;
-		}
+			if (!isConnected) {
+				console.error('Not connected to the correct Bluetooth headphones!');
+				return;
+			}
 
-		file.on('finish', () => {
-			console.log('File download completed successfully!');
+			file.on('finish', () => {
+				console.log('File download completed successfully!');
 
-			const { exec } = require('child_process');
+				const { exec } = require('child_process');
 
-			const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
-				if (error) {
-					console.error('Failed to stream audio:', error);
-					return;
-				}
+				const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
+					if (error) {
+						console.error('Failed to stream audio:', error);
+						return;
+					}
+				});
+
+				child.on('close', (code) => {
+					if (code !== 0) {
+						console.error('Audio playback failed with exit code:', code);
+						return;
+					}
+
+					console.log('Audio streamed successfully!');
+					// Call your next function or perform additional tasks here
+				});
 			});
 
-			child.on('close', (code) => {
-				if (code !== 0) {
-					console.error('Audio playback failed with exit code:', code);
-					return;
-				}
-
-				console.log('Audio streamed successfully!');
-				// Call your next function or perform additional tasks here
+			// Handle any errors during download
+			file.on('error', (error) => {
+				console.error('Error downloading file:', error);
 			});
+		})
+		.on('error', (error) => {
+			console.error('Error downloading MP3:', error);
 		});
-
-		// Handle any errors during download
-		file.on('error', (error) => {
-			console.error('Error downloading file:', error);
-		});
-	});
-
-	// Handle any errors during the HTTP request
-	https.on('error', (error) => {
-		console.error('Error downloading MP3:', error);
-	});
 
 	// https
 	// 	.get(mp3URL, async (response) => {
