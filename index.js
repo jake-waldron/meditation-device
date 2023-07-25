@@ -1,4 +1,3 @@
-import runAutomation from './automation.js';
 import playTodaysMeditation from './playTodays.js';
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
