@@ -8,6 +8,7 @@ import { exec } from 'child_process';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 const checkBluetoothConnection = (deviceName) => {
+	exec('bluetoothctl connect F8:4E:17:C4:75:6E');
 	return new Promise((resolve, reject) => {
 		exec('bluetoothctl devices', (error, stdout, stderr) => {
 			if (error) {
@@ -37,7 +38,7 @@ export default async function playMp3RaspPi(mp3URL) {
 
 			if (!isConnected) {
 				console.error('Not connected to the correct Bluetooth headphones!');
-				exec('bluetoothctl connect F8:4E:17:C4:75:6E');
+
 				return;
 			}
 
