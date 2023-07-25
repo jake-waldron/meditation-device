@@ -31,7 +31,7 @@ export default async function playMp3RaspPi(mp3URL) {
 	https
 		.get(mp3URL, async (response) => {
 			response.pipe(file);
-			console.log('MP3 file downloaded successfully!');
+			console.log('MP3 download started!');
 
 			const bluetoothDeviceName = 'WH-1000XM4';
 			const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
