@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import getAuth from './auth.js';
+import { exec } from 'child_process';
 
 import { schedule } from 'node-cron';
 import playMp3RaspPi from './raspPi.js';
@@ -53,9 +54,9 @@ if (system === 'raspPi') {
 // ---------------	On Startup	----------------
 
 try {
-	removeMp3Files();
-	const bearerToken = await getAuth();
-	downloadTodaysMeditations(bearerToken);
+	// removeMp3Files();
+	// const bearerToken = await getAuth();
+	// downloadTodaysMeditations(bearerToken);
 } catch (error) {
 	console.log(error);
 }
