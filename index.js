@@ -4,7 +4,7 @@ import ArrayGpio from 'array-gpio';
 let button = ArrayGpio.setInput(37);
 button.setR('pu');
 
-let lastButtonState = 1;
+let lastButtonState = true;
 // Pressing the switch sw button, the led will turn on
 // Releasing the switch sw button, the led will turn off
 button.watch((state) => {
