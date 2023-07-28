@@ -7,7 +7,7 @@ import https from 'https';
 import { exec } from 'child_process';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
-const checkBluetoothConnection = (deviceName) => {
+async function checkBluetoothConnection(deviceName) {
 	exec(`bluetoothctl connect ${process.env.DEVICE_ID}`);
 	return new Promise((resolve, reject) => {
 		exec('bluetoothctl devices', (error, stdout, stderr) => {
@@ -19,7 +19,7 @@ const checkBluetoothConnection = (deviceName) => {
 			}
 		});
 	});
-};
+}
 
 // Function to play the MP3 file from the given URL
 export default async function playMp3RaspPi(mp3FileName) {
