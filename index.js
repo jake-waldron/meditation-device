@@ -33,7 +33,6 @@ if (system === 'raspPi') {
 				console.log('button pressed');
 				playMp3RaspPi('./audio/5min.mp3')
 					.then(() => {
-						console.log('audio done');
 						audioPlaying = false;
 					})
 					.catch((error) => {
@@ -54,9 +53,9 @@ if (system === 'raspPi') {
 // ---------------	On Startup	----------------
 
 try {
-	// removeMp3Files();
-	// const bearerToken = await getAuth();
-	// downloadTodaysMeditations(bearerToken);
+	removeMp3Files();
+	const bearerToken = await getAuth();
+	downloadTodaysMeditations(bearerToken);
 } catch (error) {
 	console.log(error);
 }
