@@ -1,9 +1,3 @@
-// Make sure you have the bluealsa and bluez-alsa packages installed on your Raspberry Pi Zero:
-
-// sudo apt-get update
-// sudo apt-get install bluealsa bluez-alsa
-import fs from 'fs';
-import https from 'https';
 import { exec } from 'child_process';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
