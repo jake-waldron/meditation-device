@@ -1,7 +1,7 @@
 import playTodaysMeditation from './playTodays.js';
 import ArrayGpio from 'array-gpio';
 
-const button = ArrayGpio.setInput(37);
+let button = ArrayGpio.setInput(37);
 button.setR('pu');
 
 let lastButtonState = 1;
