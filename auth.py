@@ -2,7 +2,7 @@ import json
 import re
 import os
 
-from dotenv import dotenv_values, set_key
+from dotenv import dotenv_values, set_key, get_key
 import requests
 from rich.console import Console
 
@@ -36,6 +36,10 @@ def get_credentials():
     email = input("Username: ")
     password = input("Password: ")
     length = input("Desired meditiation length (3, 5, 10, 15, 20): ")
+    create_env_file()
+    set_key(".env", "USERNAME", email)
+    set_key(".env", "PASSWORD", password)
+    set_key(".env", "LENGTH", length)
     return email, password, length
 
 
@@ -87,19 +91,21 @@ def authenticate(email, password):
 
 
 def create_env_file():
-    if not os.path.exists(".env.local"):
-        with open(".env.local", "w") as env_file:
+    if not os.path.exists(".env"):
+        with open(".env", "w") as env_file:
             env_file.write("")
 
 
-email, password, length = get_credentials()
+email = get_key(".env", "USERNAME")
+password = get_key(".env", "PASSWORD")
+if not email or not password:
+    email, password, length = get_credentials()
+
 bearer_token = authenticate(email, password)
 
-create_env_file()
-
 if bearer_token:
-    set_key(".env.local", "USERNAME", email)
-    set_key(".env.local", "PASSWORD", password)
-    set_key(".env.local", "LENGTH", length)
-    set_key(".env.local", "BEARER_TOKEN", bearer_token)
-    print("Username, Password, and Bearer Token added to .env.local file.")
+    # set_key(".env", "USERNAME", email)
+    # set_key(".env", "PASSWORD", password)
+    # set_key(".env", "LENGTH", length)
+    set_key(".env", "BEARER_TOKEN", bearer_token)
+    print(bearer_token)
