@@ -35,4 +35,4 @@ out/
 *.sw*
 
 # MP3S
-./audio/*.mp3
+audio/*.mp3
