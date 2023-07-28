@@ -21,7 +21,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 	const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
 
 	// Delay so that the bluetooth connected voice shuts up before playing mp3
-	await new Promise((resolve) => setTimeout(resolve, 1000));
+	await new Promise((resolve) => setTimeout(resolve, 2000));
 
 	return new Promise((resolve, reject) => {
 		if (!isConnected) {
