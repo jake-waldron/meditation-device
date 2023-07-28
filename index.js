@@ -8,6 +8,7 @@ let lastButtonState = 1;
 // Pressing the switch sw button, the led will turn on
 // Releasing the switch sw button, the led will turn off
 button.watch((state) => {
+	console.log(state);
 	if (state !== lastButtonState) {
 		// console.log('button state changed');
 		if (state === 0) {
