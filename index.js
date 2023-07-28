@@ -1,11 +1,15 @@
-import downloadTodaysMeditations from './playTodays.js';
+import downloadTodaysMeditations from './download.js';
 import gpio from 'array-gpio';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import getAuth from './auth.js';
 
+import { schedule } from 'node-cron';
+
 dotenv.config();
+
+// -------------- Raspberry Pi Stuff ----------------
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
 console.log(system);
@@ -32,23 +36,33 @@ if (system === 'raspPi') {
 	});
 }
 
-const bearerToken = await getAuth();
+// -------------- End Raspberry Pi Stuff ----------------
 
-function checkForMp3Files() {
-	const directoryPath = path.join('./audio');
-	const files = fs.readdirSync(directoryPath);
-	const mp3Files = files.filter((file) => path.extname(file) === '.mp3');
-	return mp3Files.length > 0;
-}
-
-if (!checkForMp3Files()) {
-	console.log('no mp3 files');
-} else if (checkForMp3Files()) {
-	console.log('mp3 files found');
-}
+// ---------------	On Startup	----------------
 
 try {
+	removeMp3Files();
+	const bearerToken = await getAuth();
 	downloadTodaysMeditations(bearerToken);
 } catch (error) {
 	console.log(error);
+}
+
+schedule('0 0 * * *', async () => {
+	removeMp3Files();
+	const bearerToken = await getAuth();
+	downloadTodaysMeditations(bearerToken);
+});
+
+// ---------------	End On Startup	----------------
+
+function removeMp3Files() {
+	console.log('clearing folder');
+	const directoryPath = path.join('./audio');
+	const files = fs.readdirSync(directoryPath);
+	const mp3Files = files.filter((file) => path.extname(file) === '.mp3');
+	mp3Files.forEach((file) => {
+		fs.unlinkSync(path.join(directoryPath, file));
+	});
+	console.log('mp3 files removed');
 }
