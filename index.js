@@ -1,5 +1,4 @@
 import playTodaysMeditation from './playTodays.js';
-const r = require('array-gpio');
 import ArrayGpio from 'array-gpio';
 
 let sw = ArrayGpio.in(23);
