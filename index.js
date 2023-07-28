@@ -31,7 +31,7 @@ if (system === 'raspPi') {
 			if (state === false && audioPlaying === false) {
 				audioPlaying = true;
 				console.log('button pressed');
-				playMp3RaspPi('./audio/5min.mp3')
+				playMp3RaspPi('./audio/10min.mp3')
 					.then(() => {
 						audioPlaying = false;
 					})
