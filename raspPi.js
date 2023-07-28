@@ -26,6 +26,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 	console.log(`gonna play ${mp3FileName}`);
 	const bluetoothDeviceName = 'WH-1000XM4';
 	const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
+	console.log(isConnected);
 
 	return new Promise((resolve, reject) => {
 		if (!isConnected) {
