@@ -6,6 +6,7 @@ import path from 'path';
 import getAuth from './auth.js';
 
 import { schedule } from 'node-cron';
+import playMp3RaspPi from './raspPi.js';
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ dotenv.config();
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
 console.log(system);
 
+let audioPlaying = false;
+
 if (system === 'raspPi') {
 	// set up the button
 	let button = gpio.setInput(37);
@@ -21,16 +24,19 @@ if (system === 'raspPi') {
 
 	let lastButtonState = true;
 
-	button.watch((state) => {
+	button.watch(async (state) => {
 		console.log(state);
 		if (state !== lastButtonState) {
-			if (state === false) {
+			if (state === false && audioPlaying === false) {
+				audioPlaying = true;
 				console.log('button pressed');
-				// playTodaysMeditation(system);
+				playMp3RaspPi('./audio/10min.mp3').then(() => {
+					audioPlaying = false;
+				});
 			}
-			if (state === true) {
-				console.log('button released');
-			}
+			// if (state === true) {
+			// 	console.log('button released');
+			// }
 		}
 		lastButtonState = state;
 	});

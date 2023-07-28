@@ -22,64 +22,36 @@ const checkBluetoothConnection = (deviceName) => {
 };
 
 // Function to play the MP3 file from the given URL
-export default async function playMp3RaspPi(mp3URL) {
-	// Generate a unique file name for the downloaded MP3 file
-	const mp3FileName = `temp_${Date.now()}.mp3`;
+export default async function playMp3RaspPi(mp3FileName) {
+	const bluetoothDeviceName = 'WH-1000XM4';
+	const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
 
-	const file = fs.createWriteStream(mp3FileName);
+	return new Promise((resolve, reject) => {
+		if (!isConnected) {
+			console.error('Not connected to the correct Bluetooth headphones!');
 
-	https
-		.get(mp3URL, async (response) => {
-			response.pipe(file);
-			console.log('MP3 download started!');
+			return;
+		}
 
-			const bluetoothDeviceName = 'WH-1000XM4';
-			const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
+		const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
+			if (error) {
+				console.error('Failed to stream audio:', error);
+				exec('bluetoothctl disconnect');
+				reject(error);
+			}
+		});
 
-			if (!isConnected) {
-				console.error('Not connected to the correct Bluetooth headphones!');
-
-				return;
+		child.on('close', (code) => {
+			if (code !== 0) {
+				console.error('Audio playback failed with exit code:', code);
+				exec('bluetoothctl disconnect');
+				reject(code);
 			}
 
-			file.on('finish', () => {
-				console.log('File download completed successfully!');
+			console.log('Audio streamed successfully!');
 
-				const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
-					if (error) {
-						console.error('Failed to stream audio:', error);
-						return;
-					}
-				});
-
-				child.on('close', (code) => {
-					if (code !== 0) {
-						console.error('Audio playback failed with exit code:', code);
-						return;
-					}
-
-					console.log('Audio streamed successfully!');
-					// Call your next function or perform additional tasks here
-					fs.unlink(mp3FileName, (error) => {
-						if (error) {
-							console.error('Failed to delete MP3 file:', error);
-							return;
-						}
-						console.log('MP3 file deleted!');
-						exec('bluetoothctl disconnect');
-						return new Promise((resolve, reject) => {
-							resolve();
-						});
-					});
-				});
-			});
-
-			// Handle any errors during download
-			file.on('error', (error) => {
-				console.error('Error downloading file:', error);
-			});
-		})
-		.on('error', (error) => {
-			console.error('Error downloading MP3:', error);
+			exec('bluetoothctl disconnect');
+			resolve();
 		});
+	});
 }
