@@ -10,12 +10,12 @@ let lastButtonState = true;
 button.watch((state) => {
 	console.log(state);
 	if (state !== lastButtonState) {
-		// console.log('button state changed');
-		if (state === 0) {
+		console.log('button state changed');
+		if (state === false) {
 			console.log('button pressed');
 			playTodaysMeditation(system);
 		}
-		if (state === 1) {
+		if (state === true) {
 			console.log('button released');
 		}
 	}
