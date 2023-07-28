@@ -1,23 +1,13 @@
 import playTodaysMeditation from './playTodays.js';
-import { Gpio } from 'pigpio';
+const r = require('array-gpio');
+import ArrayGpio from 'array-gpio';
 
-// const Gpio = require('pigpio').Gpio;
+let sw = ArrayGpio.in(23);
 
-const button = new Gpio(23, {
-	mode: Gpio.INPUT,
-	pullUpDown: Gpio.PUD_UP,
-	alert: true,
-});
-
-let count = 0;
-
-// Level must be stable for 10 ms before an alert event is emitted.
-button.glitchFilter(10000);
-
-button.on('alert', (level, tick) => {
-	if (level === 0) {
-		console.log(++count);
-	}
+// Pressing the switch sw button, the led will turn on
+// Releasing the switch sw button, the led will turn off
+sw.watch((state) => {
+	console.log('state: ' + state);
 });
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';

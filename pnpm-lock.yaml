@@ -5,17 +5,28 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  array-gpio:
+    specifier: ^1.7.2
+    version: 1.7.2
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
   jsonwebtoken:
     specifier: ^9.0.1
     version: 9.0.1
-  pigpio:
-    specifier: ^3.3.1
-    version: 3.3.1
 
 packages:
+
+  /array-gpio@1.7.2:
+    resolution: {integrity: sha512-msBURyeW72eKuHgtshA2SoIQTbgp2BMJCSJ6xH4YpscUQGthPpv5KazExG5RJogANeWxtqdYDD/NieiOUyyxzg==}
+    engines: {node: '>= 8.0.0'}
+    cpu: [arm, arm64]
+    os: [linux]
+    requiresBuild: true
+    dependencies:
+      bindings: 1.5.0
+      nan: 2.17.0
+    dev: false
 
   /bindings@1.5.0:
     resolution: {integrity: sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==}
@@ -84,15 +95,6 @@ packages:
 
   /nan@2.17.0:
     resolution: {integrity: sha512-2ZTgtl0nJsO0KQCjEpxcIr5D+Yv90plTitZt9JBfQvVJDS5seMl3FOvsh3+9CoYWXf/1l5OaZzzF6nDm4cagaQ==}
-    dev: false
-
-  /pigpio@3.3.1:
-    resolution: {integrity: sha512-z7J55K14IwWkA+oW5JHzWcgwThFAuJ7IzV3A2//yRm4jJ2DTU0DHIy91DB0siOi12rvvlrIhRetEuAo0ztF/vQ==}
-    engines: {node: '>=10.0.0'}
-    requiresBuild: true
-    dependencies:
-      bindings: 1.5.0
-      nan: 2.17.0
     dev: false
 
   /safe-buffer@5.2.1:
