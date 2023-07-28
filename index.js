@@ -1,7 +1,7 @@
 import playTodaysMeditation from './playTodays.js';
 import ArrayGpio from 'array-gpio';
 
-let sw = ArrayGpio.in(23);
+let sw = ArrayGpio.in(26);
 
 // Pressing the switch sw button, the led will turn on
 // Releasing the switch sw button, the led will turn off
