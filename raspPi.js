@@ -27,7 +27,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 		if (!isConnected) {
 			console.error('Not connected to the correct Bluetooth headphones!');
 
-			reject('Not connected to the correct Bluetooth headphones!');
+			reject(new Error('Not connected to the correct Bluetooth headphones!'));
 		}
 
 		const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
@@ -42,7 +42,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 			if (code !== 0) {
 				console.error('Audio playback failed with exit code:', code);
 				exec('bluetoothctl disconnect');
-				reject(code);
+				reject(new Error('Audio playback failed with exit code:', code));
 			}
 
 			console.log('Audio streamed successfully!');
