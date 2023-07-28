@@ -33,3 +33,6 @@ out/
 *.njsproj
 *.sln
 *.sw*
+
+# MP3S
+./audio/*.mp3

@@ -1,7 +1,9 @@
-import playTodaysMeditation from './playTodays.js';
+import downloadTodaysMeditations from './playTodays.js';
 import gpio from 'array-gpio';
 import dotenv from 'dotenv';
-import { exec } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import getAuth from './auth.js';
 
 dotenv.config();
 
@@ -30,28 +32,23 @@ if (system === 'raspPi') {
 	});
 }
 
-async function getAuth() {
-	console.log('getting auth');
-	let bearer;
-	return new Promise((resolve, reject) => {
-		const child = exec('python3 auth.py', (error, stdout, stderr) => {
-			if (error) {
-				reject(error);
-			}
-			bearer = stdout;
-		});
-		child.on('close', (code, signal) => {
-			console.log('auth gotten');
-			resolve(bearer.trim());
-		});
-	});
+const bearerToken = await getAuth();
+
+function checkForMp3Files() {
+	const directoryPath = path.join('./audio');
+	const files = fs.readdirSync(directoryPath);
+	const mp3Files = files.filter((file) => path.extname(file) === '.mp3');
+	return mp3Files.length > 0;
 }
 
-const bearerToken = await getAuth();
-console.log(bearerToken);
+if (!checkForMp3Files()) {
+	console.log('no mp3 files');
+} else if (checkForMp3Files()) {
+	console.log('mp3 files found');
+}
 
 try {
-	playTodaysMeditation(system, bearerToken);
+	downloadTodaysMeditations(bearerToken);
 } catch (error) {
 	console.log(error);
 }
