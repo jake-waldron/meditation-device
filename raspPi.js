@@ -20,7 +20,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 	const bluetoothDeviceName = 'WH-1000XM4';
 	const isConnected = await checkBluetoothConnection(bluetoothDeviceName);
 
-	// ADD DELAY so that the bluetooth connected voice shuts up before playing mp3
+	// Delay so that the bluetooth connected voice shuts up before playing mp3
 	await new Promise((resolve) => setTimeout(resolve, 1000));
 
 	return new Promise((resolve, reject) => {
