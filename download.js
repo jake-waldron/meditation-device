@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import https from 'https';
-import {meditaitonDurations} from "./utils.js";
+import {meditationDurations} from "./utils.js";
 
 dotenv.config();
 
@@ -96,7 +96,7 @@ export default async function downloadTodaysMeditations(token) {
 
 // Download the MP3 file and save it to the audio folder
 function downloadMp3(meditation, index) {
-	const mp3FileName = `./audio/${meditaitonDurations[index]}.mp3`;
+	const mp3FileName = `./audio/${meditationDurations[index]}.mp3`;
 
 	return new Promise((resolve, reject) => {
 		const file = fs.createWriteStream(mp3FileName);
