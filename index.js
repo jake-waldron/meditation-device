@@ -4,17 +4,35 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import getAuth from './auth.js';
-import { exec } from 'child_process';
 
 import { schedule } from 'node-cron';
 import playMp3RaspPi from './raspPi.js';
+import playMP3 from './audio.js';
 
 dotenv.config();
 
-// -------------- Raspberry Pi Stuff ----------------
+// ---------------	On Startup	----------------
+
+try {
+	removeMp3Files();
+	const bearerToken = await getAuth();
+	downloadTodaysMeditations(bearerToken);
+} catch (error) {
+	console.log(error);
+}
+
+schedule('0 0 * * *', async () => {
+	removeMp3Files();
+	const bearerToken = await getAuth();
+	downloadTodaysMeditations(bearerToken);
+});
+
+// ---------------	End On Startup	----------------
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
 console.log(system);
+
+// -------------- Raspberry Pi Stuff ----------------
 
 let audioPlaying = false;
 
@@ -50,23 +68,13 @@ if (system === 'raspPi') {
 
 // -------------- End Raspberry Pi Stuff ----------------
 
-// ---------------	On Startup	----------------
+// -------------- Mac Stuff ----------------
 
-try {
-	removeMp3Files();
-	const bearerToken = await getAuth();
-	downloadTodaysMeditations(bearerToken);
-} catch (error) {
-	console.log(error);
+if (system === 'macOS') {
+	playMP3('./audio/10min.mp3');
 }
 
-schedule('0 0 * * *', async () => {
-	removeMp3Files();
-	const bearerToken = await getAuth();
-	downloadTodaysMeditations(bearerToken);
-});
-
-// ---------------	End On Startup	----------------
+// -------------- End Mac Stuff ----------------
 
 function removeMp3Files() {
 	console.log('clearing folder');
