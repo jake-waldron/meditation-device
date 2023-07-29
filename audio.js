@@ -1,4 +1,4 @@
-import { promisifyExec } from './utils';
+import { promisifyExec } from './utils.js';
 
 export default async function playMP3(mp3FileName) {
 	try {
