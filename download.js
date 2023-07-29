@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import https from 'https';
+import {meditaitonDurations} from "./utils.js";
 
 dotenv.config();
 
@@ -38,32 +39,6 @@ function getUserId() {
 	return '';
 }
 
-function getDuration(time) {
-	const orig_duration = time / 60000;
-
-	let minutes = Math.floor(time / 60000);
-	let unit_place = minutes % 10;
-
-	if (0 < unit_place && unit_place < 5) {
-		minutes -= unit_place;
-	} else if (unit_place > 5) {
-		minutes -= unit_place - 5;
-	}
-
-	if (minutes === 0) {
-		if (orig_duration >= 2 && orig_duration < 3) {
-			minutes = 2;
-		} else if (orig_duration >= 3 && orig_duration < 4) {
-			minutes = 3;
-		} else if (orig_duration >= 4 && orig_duration <= 5) {
-			minutes = 5;
-		} else {
-			minutes = 1;
-		}
-	}
-
-	return minutes;
-}
 
 export default async function downloadTodaysMeditations(token) {
 	return new Promise(async (resolve, reject) => {
@@ -103,13 +78,17 @@ export default async function downloadTodaysMeditations(token) {
 				const { url } = await response.json();
 				return {
 					url,
-					duration: getDuration(meditation.attributes?.durationInMs),
+					duration: meditation.attributes?.durationInMs,
 					name: meditation.attributes?.filename,
 				};
 			})
-		);
+		)
 
-		await Promise.all(downloadLinks.map((link) => downloadMp3(link)));
+		const sortedByLength = downloadLinks.sort((a, b) => a.duration - b.duration);
+
+		console.log({sortedByLength});
+
+		await Promise.all(sortedByLength.map((link, index) => downloadMp3(link, index)));
 
 		console.log('All meditations downloaded!');
 		resolve();
@@ -125,18 +104,18 @@ export default async function downloadTodaysMeditations(token) {
 	});
 }
 
-function downloadMp3(meditation) {
-	const mp3FileName = `./audio/${meditation.duration}min.mp3`;
+function downloadMp3(meditation, index) {
+	const mp3FileName = `./audio/${meditaitonDurations[index]}.mp3`;
 
 	return new Promise((resolve, reject) => {
 		const file = fs.createWriteStream(mp3FileName);
 		https
 			.get(meditation.url, (response) => {
 				response.pipe(file);
-				console.log('MP3 file download started!' + meditation.duration);
+				console.log(`MP3 file download started! ${mp3FileName}`);
 
 				file.on('finish', () => {
-					console.log(`File download completed successfully! ${meditation.duration}min`);
+					console.log(`File download completed successfully! ${mp3FileName}`);
 					resolve(mp3FileName);
 				});
 			})
