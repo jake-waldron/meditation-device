@@ -47,7 +47,7 @@ export default async function playMp3RaspPi(mp3FileName) {
 			if (code !== 0) {
 				console.error('Audio playback failed with exit code:', code);
 				exec('bluetoothctl disconnect');
-				reject(new Error('Audio playback failed with exit code:', code));
+				reject(new Error(`Audio playback failed with exit code: ${code}`));
 			}
 
 			console.log('Audio streamed successfully!');
