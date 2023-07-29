@@ -16,7 +16,7 @@ dotenv.config();
 try {
 	removeMp3Files();
 	const bearerToken = await getAuth();
-	downloadTodaysMeditations(bearerToken);
+	await downloadTodaysMeditations(bearerToken);
 } catch (error) {
 	console.log(error);
 }
@@ -24,7 +24,7 @@ try {
 schedule('0 0 * * *', async () => {
 	removeMp3Files();
 	const bearerToken = await getAuth();
-	downloadTodaysMeditations(bearerToken);
+	await downloadTodaysMeditations(bearerToken);
 });
 
 // ---------------	End On Startup	----------------
