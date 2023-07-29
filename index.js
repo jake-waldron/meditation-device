@@ -10,7 +10,7 @@ import { removeMp3Files } from './utils.js';
 
 dotenv.config();
 
-// ---------------	On Startup	----------------
+// ---------------	Setup	----------------
 
 try {
 	removeMp3Files();
@@ -25,8 +25,6 @@ schedule('0 0 * * *', async () => {
 	const bearerToken = await getAuth();
 	await downloadTodaysMeditations(bearerToken);
 });
-
-// ---------------	End On Startup	----------------
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
 
@@ -59,14 +57,11 @@ if (system === 'raspPi') {
 	});
 }
 
-// -------------- End Raspberry Pi Stuff ----------------
-
 // -------------- Mac Stuff ----------------
 
 if (system === 'macOS') {
 	playMP3('./audio/10min.mp3');
 }
 
-// -------------- End Mac Stuff ----------------
 
 
