@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { promisifyExec } from './utils';
+import { promisifyExec } from './utils.js';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 async function checkBluetoothConnection() {
