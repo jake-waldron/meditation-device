@@ -1,13 +1,12 @@
 import downloadTodaysMeditations from './download.js';
 import gpio from 'array-gpio';
 import dotenv from 'dotenv';
-import fs from 'fs';
-import path from 'path';
-import getAuth from './auth.js';
-
 import { schedule } from 'node-cron';
+
 import playMp3RaspPi from './raspPi.js';
 import playMP3 from './audio.js';
+import getAuth from './auth.js';
+import { removeMp3Files } from './utils.js';
 
 dotenv.config();
 
@@ -30,7 +29,6 @@ schedule('0 0 * * *', async () => {
 // ---------------	End On Startup	----------------
 
 const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
-console.log(system);
 
 // -------------- Raspberry Pi Stuff ----------------
 
@@ -44,11 +42,9 @@ if (system === 'raspPi') {
 	let lastButtonState = true;
 
 	button.watch(async (state) => {
-		console.log(state);
 		if (state !== lastButtonState) {
 			if (state === false && audioPlaying === false) {
 				audioPlaying = true;
-				console.log('button pressed');
 				playMp3RaspPi('./audio/10min.mp3')
 					.then(() => {
 						audioPlaying = false;
@@ -58,9 +54,6 @@ if (system === 'raspPi') {
 						audioPlaying = false;
 					});
 			}
-			// if (state === true) {
-			// 	console.log('button released');
-			// }
 		}
 		lastButtonState = state;
 	});
@@ -76,13 +69,4 @@ if (system === 'macOS') {
 
 // -------------- End Mac Stuff ----------------
 
-function removeMp3Files() {
-	console.log('clearing folder');
-	const directoryPath = path.join('./audio');
-	const files = fs.readdirSync(directoryPath);
-	const mp3Files = files.filter((file) => path.extname(file) === '.mp3');
-	mp3Files.forEach((file) => {
-		fs.unlinkSync(path.join(directoryPath, file));
-	});
-	console.log('mp3 files removed');
-}
+
