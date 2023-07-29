@@ -1,7 +1,15 @@
 import { exec } from 'child_process';
+import { promisifyExec } from './utils';
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 async function checkBluetoothConnection() {
+	try {
+		await promisifyExec('pulseaudio --check');
+	} catch (err) {
+		console.error('Pulseaudio is not running!');
+		await promisifyExec('pulseaudio --start');
+	}
+
 	return new Promise((resolve, reject) => {
 		exec(`bluetoothctl connect ${process.env.DEVICE_ID}`, (error, stdout, stderr) => {
 			if (error) {
