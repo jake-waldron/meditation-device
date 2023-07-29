@@ -39,7 +39,6 @@ function getUserId() {
 	return '';
 }
 
-
 export default async function downloadTodaysMeditations(token) {
 	return new Promise(async (resolve, reject) => {
 		BEARER_TOKEN = token;
@@ -86,24 +85,16 @@ export default async function downloadTodaysMeditations(token) {
 
 		const sortedByLength = downloadLinks.sort((a, b) => a.duration - b.duration);
 
-		console.log({sortedByLength});
-
+		// Download meditations in order of length, save them to the audio folder
 		await Promise.all(sortedByLength.map((link, index) => downloadMp3(link, index)));
 
 		console.log('All meditations downloaded!');
 		resolve();
 
-		// const signId = meditation.id;
-		// const signUrl = `https://api.prod.headspace.com/content/media-items/${signId}/make-signed-url`;
-		// const mp3Url = await getMp3Url(signUrl);
-		// if (system === 'macOS') {
-		// 	// playMP3FromURL(mp3Url);
-		// } else if (system === 'raspPi') {
-		// 	playMp3RaspPi(mp3Url);
-		// }
 	});
 }
 
+// Download the MP3 file and save it to the audio folder
 function downloadMp3(meditation, index) {
 	const mp3FileName = `./audio/${meditaitonDurations[index]}.mp3`;
 
