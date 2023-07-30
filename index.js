@@ -1,66 +1,66 @@
-import downloadTodaysMeditations from './download.js';
-import gpio from 'array-gpio';
-import dotenv from 'dotenv';
-import { schedule } from 'node-cron';
+import downloadTodaysMeditations from "./download.js";
+import gpio from "array-gpio";
+import dotenv from "dotenv";
+import { schedule } from "node-cron";
 
-import playMp3RaspPi from './raspPi.js';
-import playMP3 from './audio.js';
-import getAuth from './auth.js';
-import { removeMp3Files } from './utils.js';
+import playMp3RaspPi from "./raspPi.js";
+import playMP3 from "./audio.js";
+import getAuth from "./auth.js";
+import { removeMp3Files } from "./utils.js";
 
 dotenv.config();
 
 // ---------------	Setup	----------------
 
 try {
-	removeMp3Files();
-	const bearerToken = await getAuth();
-	await downloadTodaysMeditations(bearerToken);
+    removeMp3Files();
+    const bearerToken = await getAuth();
+    await downloadTodaysMeditations(bearerToken);
 } catch (error) {
-	console.log(error);
+    console.log(error);
 }
 
-schedule('0 0 * * *', async () => {
-	removeMp3Files();
-	const bearerToken = await getAuth();
-	await downloadTodaysMeditations(bearerToken);
+schedule("0 0 * * *", async () => {
+    removeMp3Files();
+    const bearerToken = await getAuth();
+    await downloadTodaysMeditations(bearerToken);
 });
 
-const system = process.platform === 'darwin' ? 'macOS' : 'raspPi';
+const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
 // -------------- Raspberry Pi Stuff ----------------
 
 let audioPlaying = false;
 
-if (system === 'raspPi') {
-	// set up the button
-	let button = gpio.setInput(37);
-	button.setR('pu');
+if ( system === "raspPi" ) {
+    // set up the button
+    let button = gpio.setInput(37);
+    button.setR("pu");
 
-	let lastButtonState = true;
+    let lastButtonState = true;
 
-	button.watch(async (state) => {
-		if (state !== lastButtonState) {
-			if (state === false && audioPlaying === false) {
-				audioPlaying = true;
-				playMp3RaspPi('./audio/10min.mp3')
-					.then(() => {
-						audioPlaying = false;
-					})
-					.catch((error) => {
-						console.log(error);
-						audioPlaying = false;
-					});
-			}
-		}
-		lastButtonState = state;
-	});
+    button.watch(async (state) => {
+        if ( state !== lastButtonState ) {
+            if ( state === false && audioPlaying === false ) {
+                audioPlaying = true;
+                playMp3RaspPi("./audio/10min.mp3")
+                    .then(() => {
+                        audioPlaying = false;
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        audioPlaying = false;
+                    });
+            }
+        }
+        lastButtonState = state;
+    });
 }
 
 // -------------- Mac Stuff ----------------
 
-if (system === 'macOS') {
-	playMP3('./audio/10min.mp3');
+if ( system === "macOS" ) {
+    playMP3("./audio/10min.mp3");
 }
 
 
