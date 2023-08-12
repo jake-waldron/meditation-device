@@ -34,7 +34,7 @@ if ( system === "raspPi" ) {
     const led = gpio.setOutput(8);
     const longPressLED = gpio.setOutput(35);
 
-    const longPressTime = 2000;
+    const longPressTime = 1000;
 
     const lengths = [ "3min", "5min", "10min", "15min", "20min" ];
     let lengthPosition = 0;
