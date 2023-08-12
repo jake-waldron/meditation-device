@@ -36,7 +36,7 @@ if ( system === "raspPi" ) {
 
     const longPressTime = 2000;
 
-    const lengths = [ "3 min", "5 min", "10 min", "15 min", "20 min" ];
+    const lengths = [ "3min", "5min", "10min", "15min", "20min" ];
     let lengthPosition = 0;
 
     let currentButtonState;
@@ -52,7 +52,8 @@ if ( system === "raspPi" ) {
         pushedTime = Date.now();
 
         if ( currentButtonState !== lastButtonState ) {
-            // if button pushed
+
+            // button pushed
             if ( currentButtonState === false ) {
 
                 if ( longPressState === true ) { // if inside long press state
@@ -85,11 +86,11 @@ if ( system === "raspPi" ) {
                     console.log(`Meditation Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
+                // button released
             } else if ( currentButtonState === true ) {
                 if ( longPressState === true ) { // button released inside long press
                     console.log(`Set to: ${lengths[lengthPosition]}`);
                 }
-                // console.log("button released");
                 led.off();
                 clearTimeout(timer);
             }
