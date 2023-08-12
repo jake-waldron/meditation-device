@@ -69,7 +69,7 @@ if ( system === "raspPi" ) {
                 buttonPressed = false;
                 console.log("button released");
                 led.off();
-                timer.clearTimeout();
+                clearTimeout(timer);
             }
         }
 
