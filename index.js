@@ -1,15 +1,11 @@
-import downloadTodaysMeditations from "./download.js";
 import gpio from "array-gpio";
 import dotenv from "dotenv";
-import { schedule } from "node-cron";
 import playMP3 from "./audio.js";
-import getAuth from "./auth.js";
-import { removeMp3Files } from "./utils.js";
 
 dotenv.config();
 
 // ---------------	Setup	----------------
-
+/*
 try {
     removeMp3Files();
     const bearerToken = await getAuth();
@@ -23,6 +19,7 @@ schedule("0 0 * * *", async () => {
     const bearerToken = await getAuth();
     await downloadTodaysMeditations(bearerToken);
 });
+*/
 
 const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
