@@ -61,8 +61,7 @@ if ( system === "raspPi" ) {
 
                 } else { // regular press
                     led.on();
-                    console.log("button pressed");
-                    console.log(`length: ${lengths[lengthPosition]}`);
+                    console.log(`Current Length: ${lengths[lengthPosition]}`);
                     // if ( audioPlaying === false ) {
                     //     audioPlaying = true;
                     //     playMp3RaspPi("./audio/10min.mp3")
@@ -77,17 +76,19 @@ if ( system === "raspPi" ) {
                 }
 
                 timer = setTimeout(() => {
-                    console.log("long press");
+                    console.log("Select Length");
+                    if ( longPressState === true ) {
+                        lengthPosition < 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
+                    }
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
-                    lengthPosition--;
                     console.log(`Meditation Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
             } else if ( currentButtonState === true ) {
                 if ( longPressState === true ) {
                     // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
-                    console.log(`length: ${lengths[lengthPosition]}`);
+                    console.log(`Set to ${lengths[lengthPosition]}`);
                 }
                 // console.log("button released");
                 led.off();
