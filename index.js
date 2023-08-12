@@ -29,9 +29,10 @@ let audioPlaying = false;
 
 if ( system === "raspPi" ) {
     // set up the button
-    let button = gpio.setInput(37);
+    const button = gpio.setInput(37);
     button.setR("pu");
     const led = gpio.setOutput(8);
+    const longPressLED = gpio.setOutput(35);
 
     let currentButtonState;
     let lastButtonState = true;
@@ -39,6 +40,8 @@ if ( system === "raspPi" ) {
     let pushedTime;
 
     let timer;
+
+    let longPressState = false;
 
     button.watch(async (state) => {
         currentButtonState = state;
@@ -52,6 +55,8 @@ if ( system === "raspPi" ) {
 
                 timer = setTimeout(() => {
                     console.log("long press");
+                    longPressState = !longPressState;
+                    longPressLED.toggle();
                 }, 5000);
             }
                 // if ( state === false && audioPlaying === false ) {
