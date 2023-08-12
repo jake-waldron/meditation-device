@@ -46,6 +46,7 @@ if ( system === "raspPi" ) {
     let timer;
 
     let longPressState = false;
+    let shortPressState = true;
 
     button.watch(async (state) => {
         currentButtonState = state;
@@ -82,6 +83,7 @@ if ( system === "raspPi" ) {
                         lengthPosition <= 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
                     }
                     longPressState = !longPressState;
+                    shortPressState = !shortPressState;
                     longPressLED.write(longPressState);
                     console.log(`Meditation Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
@@ -90,7 +92,7 @@ if ( system === "raspPi" ) {
             } else if ( currentButtonState === true ) {
                 if ( longPressState === true ) { // button released inside long press
                     console.log(`Set to: ${lengths[lengthPosition]}`);
-                } else {
+                } else if ( shortPressState === true ) {
                     console.log(`Start ${lengths[lengthPosition]} Meditation`);
                 }
                 led.off();
