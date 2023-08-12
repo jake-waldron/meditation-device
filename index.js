@@ -38,7 +38,7 @@ if ( system === "raspPi" ) {
     button.watch(async (state) => {
         let pushedTime = Date.now();
         while (state === false) {
-            console.log(Date.now());
+            // console.log(Date.now());
             if ( Date.now() - pushedTime > 5000 ) {
                 console.log("long press");
             }
