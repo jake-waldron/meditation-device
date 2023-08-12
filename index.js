@@ -45,9 +45,10 @@ if ( system === "raspPi" ) {
                 led.on();
                 console.log("button pressed");
 
-                while (currentButtonState === false && state === false) {
+                while (currentButtonState === false) {
                     button.read((state) => {
                         currentButtonState = state;
+                        if ( state === true ) break;
                     });
                     if ( Date.now() - pushedTime > 5000 ) {
                         console.log("long press");
