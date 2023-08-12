@@ -36,6 +36,9 @@ if ( system === "raspPi" ) {
 
     const longPressTime = 2000;
 
+    const lengths = [ "3 min", "5 min", "10 min", "15 min", "20 min" ];
+    let lengthPosition = 0;
+
     let currentButtonState;
     let lastButtonState = true;
     let pushedTime;
@@ -52,13 +55,25 @@ if ( system === "raspPi" ) {
             // if button pushed
             if ( currentButtonState === false ) {
 
-                // ------ Long Press Handler ------
-                if ( longPressState === true ) {
+                if ( longPressState === true ) { // if inside long press state
                     console.log("button pushed in long press");
-                } else {
-                    // regular press
+                    console.log(`length: ${lengths[lengthPosition]}`);
+                    lengthPosition < lengths.length ? lengthPosition++ : lengthPosition = 0;
+                } else { // regular press
                     led.on();
                     console.log("button pressed");
+
+                    // if ( audioPlaying === false ) {
+                    //     audioPlaying = true;
+                    //     playMp3RaspPi("./audio/10min.mp3")
+                    //         .then(() => {
+                    //             audioPlaying = false;
+                    //         })
+                    //         .catch((error) => {
+                    //             console.log(error);
+                    //             audioPlaying = false;
+                    //         });
+                    // }
                 }
 
                 timer = setTimeout(() => {
@@ -66,19 +81,8 @@ if ( system === "raspPi" ) {
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
                 }, longPressTime);
-            }
-                // if ( state === false && audioPlaying === false ) {
-                //     audioPlaying = true;
-                //     playMp3RaspPi("./audio/10min.mp3")
-                //         .then(() => {
-                //             audioPlaying = false;
-                //         })
-                //         .catch((error) => {
-                //             console.log(error);
-                //             audioPlaying = false;
-                //         });
-            // }
-            else if ( currentButtonState === true ) {
+
+            } else if ( currentButtonState === true ) {
                 console.log("button released");
                 led.off();
                 clearTimeout(timer);
