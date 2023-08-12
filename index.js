@@ -56,9 +56,8 @@ if ( system === "raspPi" ) {
             if ( currentButtonState === false ) {
 
                 if ( longPressState === true ) { // if inside long press state
-                    console.log("button pushed in long press");
                     lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
-
+                    console.log(`Set to ${lengths[lengthPosition]}`);
                 } else { // regular press
                     led.on();
                     console.log(`Current Length: ${lengths[lengthPosition]}`);
@@ -78,6 +77,7 @@ if ( system === "raspPi" ) {
                 timer = setTimeout(() => {
                     console.log("Select Length");
                     if ( longPressState === true ) {
+                        // if exiting long press, negate the position change from that push
                         lengthPosition < 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
                     }
                     longPressState = !longPressState;
@@ -87,8 +87,7 @@ if ( system === "raspPi" ) {
 
             } else if ( currentButtonState === true ) {
                 if ( longPressState === true ) {
-                    // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
-                    console.log(`Set to ${lengths[lengthPosition]}`);
+
                 }
                 // console.log("button released");
                 led.off();
