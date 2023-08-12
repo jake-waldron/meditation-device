@@ -34,16 +34,19 @@ if ( system === "raspPi" ) {
     const led = gpio.setOutput(8);
 
     let lastButtonState = true;
+    let currentButtonState;
 
     button.watch(async (state) => {
+        currentButtonState = state;
         let pushedTime = Date.now();
-        if ( state !== lastButtonState ) {
-            if ( state === false ) {
+
+        if ( currentButtonState !== lastButtonState ) {
+            if ( currentButtonState === false ) {
                 led.on();
                 console.log("button pressed");
 
-                while (state === false) {
-                    state = button.read();
+                while (currentButtonState === false) {
+                    currentButtonState = button.read();
                     if ( Date.now() - pushedTime > 5000 ) {
                         console.log("long press");
                     }
@@ -60,12 +63,12 @@ if ( system === "raspPi" ) {
                 //             audioPlaying = false;
                 //         });
             // }
-            else if ( state === true ) {
+            else if ( currentButtonState === true ) {
                 console.log("button released");
                 led.off();
             }
         }
-        lastButtonState = state;
+        lastButtonState = currentButtonState;
     });
 }
 
