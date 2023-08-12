@@ -90,7 +90,7 @@ if ( system === "raspPi" ) {
                     console.log(`Start ${lengths[lengthPosition]} Meditation`);
                     // if ( audioPlaying === false ) {
                     //     audioPlaying = true;
-                    //     playMp3RaspPi("./audio/10min.mp3")
+                    //     playMp3RaspPi(`./audio/${lengths[lengthPosition]}.mp3`)
                     //         .then(() => {
                     //             audioPlaying = false;
                     //         })
