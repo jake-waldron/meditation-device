@@ -2,8 +2,6 @@ import downloadTodaysMeditations from "./download.js";
 import gpio from "array-gpio";
 import dotenv from "dotenv";
 import { schedule } from "node-cron";
-
-import playMp3RaspPi from "./raspPi.js";
 import playMP3 from "./audio.js";
 import getAuth from "./auth.js";
 import { removeMp3Files } from "./utils.js";
@@ -36,22 +34,28 @@ if ( system === "raspPi" ) {
     // set up the button
     let button = gpio.setInput(37);
     button.setR("pu");
+    const led = gpio.setOutput(8);
 
     let lastButtonState = true;
 
     button.watch(async (state) => {
         if ( state !== lastButtonState ) {
-            if ( state === false && audioPlaying === false ) {
-                audioPlaying = true;
-                playMp3RaspPi("./audio/10min.mp3")
-                    .then(() => {
-                        audioPlaying = false;
-                    })
-                    .catch((error) => {
-                        console.log(error);
-                        audioPlaying = false;
-                    });
+            if ( state === false ) {
+                led.on();
             }
+            // if ( state === false && audioPlaying === false ) {
+            //     audioPlaying = true;
+            //     playMp3RaspPi("./audio/10min.mp3")
+            //         .then(() => {
+            //             audioPlaying = false;
+            //         })
+            //         .catch((error) => {
+            //             console.log(error);
+            //             audioPlaying = false;
+            //         });
+            // }
+        } else if ( state === true ) {
+            led.off();
         }
         lastButtonState = state;
     });
