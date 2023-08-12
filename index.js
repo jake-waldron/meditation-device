@@ -42,15 +42,13 @@ if ( system === "raspPi" ) {
         currentButtonState = state;
         pushedTime = Date.now();
 
-        let timer;
-
         if ( currentButtonState !== lastButtonState ) {
             if ( currentButtonState === false ) {
                 buttonPressed = true;
                 led.on();
                 console.log("button pressed");
 
-                timer = setTimeout(() => {
+                var timer = setTimeout(() => {
                     console.log("long press");
                 }, 5000);
             }
