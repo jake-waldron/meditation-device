@@ -80,6 +80,7 @@ if ( system === "raspPi" ) {
                     console.log("long press");
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
+                    lengthPosition--;
                     console.log(`Meditation Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
