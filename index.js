@@ -47,6 +47,7 @@ if ( system === "raspPi" ) {
 
                 while (currentButtonState === false) {
                     button.read((state) => {
+                        console.log(state);
                         currentButtonState = state;
                     });
                     if ( Date.now() - pushedTime > 5000 ) {
