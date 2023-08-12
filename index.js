@@ -36,6 +36,9 @@ if ( system === "raspPi" ) {
     let lastButtonState = true;
 
     button.watch(async (state) => {
+        if ( state === false ) {
+            console.log(Date.now());
+        }
         if ( state !== lastButtonState ) {
             if ( state === false ) {
                 led.on();
