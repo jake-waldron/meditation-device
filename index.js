@@ -34,9 +34,10 @@ if ( system === "raspPi" ) {
     const led = gpio.setOutput(8);
     const longPressLED = gpio.setOutput(35);
 
+    const longPressTime = 2000;
+
     let currentButtonState;
     let lastButtonState = true;
-    let buttonPressed = false;
     let pushedTime;
 
     let timer;
@@ -48,16 +49,23 @@ if ( system === "raspPi" ) {
         pushedTime = Date.now();
 
         if ( currentButtonState !== lastButtonState ) {
+            // if button pushed
             if ( currentButtonState === false ) {
-                buttonPressed = true;
-                led.on();
-                console.log("button pressed");
+
+                // ------ Long Press Handler ------
+                if ( longPressState === true ) {
+                    console.log("button pushed in long press");
+                } else {
+                    // regular press
+                    led.on();
+                    console.log("button pressed");
+                }
 
                 timer = setTimeout(() => {
                     console.log("long press");
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
-                }, 5000);
+                }, longPressTime);
             }
                 // if ( state === false && audioPlaying === false ) {
                 //     audioPlaying = true;
@@ -71,7 +79,6 @@ if ( system === "raspPi" ) {
                 //         });
             // }
             else if ( currentButtonState === true ) {
-                buttonPressed = false;
                 console.log("button released");
                 led.off();
                 clearTimeout(timer);
