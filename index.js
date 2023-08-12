@@ -92,11 +92,10 @@ if ( system === "raspPi" ) {
             } else if ( currentButtonState === true ) {
                 if ( longPressState === true ) { // button released inside long press
                     console.log(`Set to: ${lengths[lengthPosition]}`);
-                    if ( releasingLongPress ) {
-                        releasingLongPress = false;
-                    }
                 }
-                if ( !longPressState && !releasingLongPress ) {
+                if ( releasingLongPress ) {
+                    releasingLongPress = false;
+                } else if ( !longPressState && !releasingLongPress ) {
                     console.log(`Start ${lengths[lengthPosition]} Meditation`);
                 }
                 led.off();
