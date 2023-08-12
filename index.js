@@ -62,18 +62,8 @@ if ( system === "raspPi" ) {
 
                 } else { // regular press
                     led.on();
-                    console.log(`Current Length: ${lengths[lengthPosition]}`);
-                    // if ( audioPlaying === false ) {
-                    //     audioPlaying = true;
-                    //     playMp3RaspPi("./audio/10min.mp3")
-                    //         .then(() => {
-                    //             audioPlaying = false;
-                    //         })
-                    //         .catch((error) => {
-                    //             console.log(error);
-                    //             audioPlaying = false;
-                    //         });
-                    // }
+
+
                 }
 
                 timer = setTimeout(() => {
@@ -85,7 +75,7 @@ if ( system === "raspPi" ) {
                     }
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
-                    console.log(`Meditation Length: ${lengths[lengthPosition]}`);
+                    console.log(`Current Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
                 // button released
@@ -93,10 +83,22 @@ if ( system === "raspPi" ) {
                 if ( longPressState === true ) { // button released inside long press
                     console.log(`Set to: ${lengths[lengthPosition]}`);
                 }
+
                 if ( releasingLongPress ) {
                     releasingLongPress = false;
                 } else if ( !longPressState && !releasingLongPress ) {
                     console.log(`Start ${lengths[lengthPosition]} Meditation`);
+                    // if ( audioPlaying === false ) {
+                    //     audioPlaying = true;
+                    //     playMp3RaspPi("./audio/10min.mp3")
+                    //         .then(() => {
+                    //             audioPlaying = false;
+                    //         })
+                    //         .catch((error) => {
+                    //             console.log(error);
+                    //             audioPlaying = false;
+                    //         });
+                    // }
                 }
                 led.off();
                 clearTimeout(timer);
