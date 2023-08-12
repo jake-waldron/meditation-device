@@ -56,7 +56,7 @@ if ( system === "raspPi" ) {
                 timer = setTimeout(() => {
                     console.log("long press");
                     longPressState = !longPressState;
-                    longPressLED.toggle();
+                    longPressLED.write(longPressState);
                 }, 5000);
             }
                 // if ( state === false && audioPlaying === false ) {
