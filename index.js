@@ -42,6 +42,7 @@ if ( system === "raspPi" ) {
         if ( state !== lastButtonState ) {
             if ( state === false ) {
                 led.on();
+                console.log("button pressed");
             }
             // if ( state === false && audioPlaying === false ) {
             //     audioPlaying = true;
