@@ -38,6 +38,8 @@ if ( system === "raspPi" ) {
     let buttonPressed = false;
     let pushedTime;
 
+    let timer;
+
     button.watch(async (state) => {
         currentButtonState = state;
         pushedTime = Date.now();
@@ -48,7 +50,7 @@ if ( system === "raspPi" ) {
                 led.on();
                 console.log("button pressed");
 
-                var timer = setTimeout(() => {
+                timer = setTimeout(() => {
                     console.log("long press");
                 }, 5000);
             }
