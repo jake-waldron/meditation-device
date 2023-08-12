@@ -62,7 +62,7 @@ if ( system === "raspPi" ) {
                 } else { // regular press
                     led.on();
                     console.log("button pressed");
-
+                    console.log(`length: ${lengths[lengthPosition]}`);
                     // if ( audioPlaying === false ) {
                     //     audioPlaying = true;
                     //     playMp3RaspPi("./audio/10min.mp3")
