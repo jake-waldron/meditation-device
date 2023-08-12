@@ -39,13 +39,15 @@ if ( system === "raspPi" ) {
     button.watch(async (state) => {
         currentButtonState = state;
         let pushedTime = Date.now();
+        let buttonPressed = false;
 
         if ( currentButtonState !== lastButtonState ) {
             if ( currentButtonState === false ) {
+                buttonPressed = true;
                 led.on();
                 console.log("button pressed");
 
-                while (currentButtonState === false) {
+                while (buttonPressed === true) {
                     button.read((state) => {
                         console.log(state);
                         currentButtonState = state;
@@ -67,6 +69,7 @@ if ( system === "raspPi" ) {
                 //         });
             // }
             else if ( currentButtonState === true ) {
+                buttonPressed = false;
                 console.log("button released");
                 led.off();
             }
