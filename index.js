@@ -41,20 +41,21 @@ if ( system === "raspPi" ) {
                 led.on();
                 console.log("button pressed");
             }
-            // if ( state === false && audioPlaying === false ) {
-            //     audioPlaying = true;
-            //     playMp3RaspPi("./audio/10min.mp3")
-            //         .then(() => {
-            //             audioPlaying = false;
-            //         })
-            //         .catch((error) => {
-            //             console.log(error);
-            //             audioPlaying = false;
-            //         });
+                // if ( state === false && audioPlaying === false ) {
+                //     audioPlaying = true;
+                //     playMp3RaspPi("./audio/10min.mp3")
+                //         .then(() => {
+                //             audioPlaying = false;
+                //         })
+                //         .catch((error) => {
+                //             console.log(error);
+                //             audioPlaying = false;
+                //         });
             // }
-        } else if ( state === true ) {
-            console.log("button released");
-            led.off();
+            else if ( state === true ) {
+                console.log("button released");
+                led.off();
+            }
         }
         lastButtonState = state;
     });
