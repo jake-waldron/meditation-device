@@ -37,16 +37,17 @@ if ( system === "raspPi" ) {
 
     button.watch(async (state) => {
         let pushedTime = Date.now();
-        while (state === false) {
-            // console.log(Date.now());
-            if ( Date.now() - pushedTime > 5000 ) {
-                console.log("long press");
-            }
-        }
         if ( state !== lastButtonState ) {
             if ( state === false ) {
                 led.on();
                 console.log("button pressed");
+
+                while (state === false) {
+                    state = button.read();
+                    if ( Date.now() - pushedTime > 5000 ) {
+                        console.log("long press");
+                    }
+                }
             }
                 // if ( state === false && audioPlaying === false ) {
                 //     audioPlaying = true;
