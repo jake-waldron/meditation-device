@@ -96,7 +96,7 @@ if ( system === "raspPi" ) {
                         releasingLongPress = false;
                     }
                 }
-                if ( !releasingLongPress ) {
+                if ( !longPressState && !releasingLongPress ) {
                     console.log(`Start ${lengths[lengthPosition]} Meditation`);
                 }
                 led.off();
