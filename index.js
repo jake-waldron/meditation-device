@@ -58,7 +58,7 @@ if ( system === "raspPi" ) {
                 if ( longPressState === true ) { // if inside long press state
                     console.log("button pushed in long press");
                     console.log(`length: ${lengths[lengthPosition]}`);
-                    lengthPosition < lengths.length ? lengthPosition++ : lengthPosition = 0;
+                    lengthPosition <= lengths.length ? lengthPosition++ : lengthPosition = 0;
                 } else { // regular press
                     led.on();
                     console.log("button pressed");
@@ -80,6 +80,7 @@ if ( system === "raspPi" ) {
                     console.log("long press");
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
+                    console.log(`Meditation Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
             } else if ( currentButtonState === true ) {
