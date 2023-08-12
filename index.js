@@ -53,6 +53,7 @@ if ( system === "raspPi" ) {
             //         });
             // }
         } else if ( state === true ) {
+            console.log("button released");
             led.off();
         }
         lastButtonState = state;
