@@ -79,7 +79,7 @@ if ( system === "raspPi" ) {
                     console.log("Select Length");
                     if ( longPressState === true ) {
                         // if exiting long press, negate the position change from that push
-                        lengthPosition < 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
+                        lengthPosition <= 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
                     }
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
