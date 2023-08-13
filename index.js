@@ -29,10 +29,12 @@ let audioPlaying = false;
 
 if ( system === "raspPi" ) {
     // set up the button
-    const button = gpio.setInput(37);
+    const button = gpio.setInput(3);
     button.setR("pu");
     const led = gpio.setOutput(8);
-    const longPressLED = gpio.setOutput(35);
+    const longPressLED = gpio.setOutput(40);
+    const lengthDisplayPins = { pin : [ 38, 37, 36, 35, 33 ] };
+    const lengthDisplay = gpio.setOutput(lengthDisplayPins);
 
     const longPressTime = 1000;
 
@@ -58,7 +60,7 @@ if ( system === "raspPi" ) {
             if ( currentButtonState === false ) {
 
                 if ( longPressState === true ) { // if inside long press state
-                    lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
+                    // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
 
                 } else { // regular press
                     led.on();
@@ -75,15 +77,27 @@ if ( system === "raspPi" ) {
                     }
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
+
+                    // make sure all length pins are off
+                    lengthDisplay.forEach((pin) => {
+                        pin.write(0);
+                    });
                     console.log(`Current Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
                 // button released
             } else if ( currentButtonState === true ) {
-                if ( longPressState === true ) { // button released inside long press
+                if ( longPressState && !releasingLongPress ) { // button released inside long press
+                    lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
                     console.log(`Set to: ${lengths[lengthPosition]}`);
+                    lengthDisplay.forEach((pin, index) => {
+                        if ( index === lengthPosition ) {
+                            pin.on();
+                        } else {
+                            pin.off();
+                        }
+                    });
                 }
-
                 if ( releasingLongPress ) {
                     releasingLongPress = false;
                 } else if ( !longPressState && !releasingLongPress ) {
