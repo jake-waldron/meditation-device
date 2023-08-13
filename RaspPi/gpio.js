@@ -11,7 +11,7 @@ let longPressState = false;
 let releasingLongPress = false;
 let pushedTime;
 let timer;
-const longPressTime = 1000;
+const longPressTime = 500;
 
 const led = gpio.setOutput(8);
 const longPressLED = gpio.setOutput(40);
