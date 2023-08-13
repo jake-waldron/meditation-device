@@ -1,5 +1,6 @@
 import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
+import playMp3RaspPi from "./audioFunctions.js";
 
 let audioPlaying = false;
 
@@ -77,20 +78,20 @@ function handleButtonReleased() {
         releasingLongPress = false;
     } else if ( !longPressState && !releasingLongPress ) {
         console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
-        // if ( audioPlaying === false ) {
-        //     audioPlaying = true;
-        //     turnOnCurrentLength(lengthPosition);
-        //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
-        //         .then(() => {
-        //             audioPlaying = false;
-        //             turnOffLengthDisplay();
-        //         })
-        //         .catch((error) => {
-        //             console.log(error);
-        //             audioPlaying = false;
-        //             turnOffLengthDisplay();
-        //         });
-        // }
+        if ( audioPlaying === false ) {
+            audioPlaying = true;
+            turnOnCurrentLength(lengthPosition);
+            playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
+                .then(() => {
+                    audioPlaying = false;
+                    turnOffLengthDisplay();
+                })
+                .catch((error) => {
+                    console.log(error);
+                    audioPlaying = false;
+                    turnOffLengthDisplay();
+                });
+        }
     }
     clearTimeout(timer);
 }

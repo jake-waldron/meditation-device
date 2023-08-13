@@ -5,7 +5,7 @@ import setupPi from "./RaspPi/gpio.js";
 dotenv.config();
 
 // ---------------	Setup	----------------
-/*
+
 try {
     removeMp3Files();
     const bearerToken = await getAuth();
@@ -19,7 +19,7 @@ schedule("0 0 * * *", async () => {
     const bearerToken = await getAuth();
     await downloadTodaysMeditations(bearerToken);
 });
-*/
+
 
 const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
