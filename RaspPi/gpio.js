@@ -62,7 +62,7 @@ function handleButtonPushed() {
         lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
     } else { // regular press
         led.on();
-        lengthDisplay[lengthPosition].on();
+        // lengthDisplay[lengthPosition].on();
     }
 
     // timer gets cleared on every button release, if it runs, enter/exit long press state
@@ -70,21 +70,20 @@ function handleButtonPushed() {
         longPressState = !longPressState;
         longPressLED.write(longPressState);
         if ( longPressState === true ) { // when entering long press state, turn on the length display
-            console.log("Select Length");
+            // console.log("Select Length");
             turnOnCurrentLength(lengthPosition);
         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
             turnOffLengthDisplay();
             lengthPosition <= 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
             releasingLongPress = true;
-            console.log(`Current Length: ${lengths[lengthPosition]}`);
+            // console.log(`Current Length: ${lengths[lengthPosition]}`);
         }
     }, longPressTime);
 }
 
 function handleButtonReleased() {
     if ( longPressState && !releasingLongPress ) { // button released inside long press
-        // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
-        console.log(`Set to: ${lengths[lengthPosition]}`);
+        // console.log(`Set to: ${lengths[lengthPosition]}`);
         turnOnCurrentLength(lengthPosition);
     }
     if ( releasingLongPress ) { // button released after exiting long press
@@ -104,7 +103,7 @@ function handleButtonReleased() {
         // }
     }
     led.off();
-    lengthDisplay[lengthPosition].off();
+    // lengthDisplay[lengthPosition].off();
     clearTimeout(timer);
 }
 
