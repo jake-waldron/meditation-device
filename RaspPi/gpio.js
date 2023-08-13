@@ -3,7 +3,7 @@ import { meditationDurations } from "../utils.js";
 
 let audioPlaying = false;
 
-const button = gpio.setInput(3);
+const button = gpio.setInput(40);
 button.setR("pu");
 let currentButtonState;
 let lastButtonState = true;
@@ -13,8 +13,8 @@ let pushedTime;
 let timer;
 const longPressTime = 500;
 
-const led = gpio.setOutput(8);
-const longPressLED = gpio.setOutput(40);
+// const led = gpio.setOutput(8);
+// const longPressLED = gpio.setOutput(40);
 
 const lengthDisplayPins = { pin : [ 38, 37, 36, 35, 33 ] };
 const lengthDisplay = gpio.setOutput(lengthDisplayPins);
@@ -61,14 +61,14 @@ function handleButtonPushed() {
     if ( longPressState === true ) { // if inside long press state
         lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
     } else { // regular press
-        led.on();
+        // led.on();
         // lengthDisplay[lengthPosition].on();
     }
 
     // timer gets cleared on every button release, if it runs, enter/exit long press state
     timer = setTimeout(() => {
         longPressState = !longPressState;
-        longPressLED.write(longPressState);
+        // longPressLED.write(longPressState);
         if ( longPressState === true ) { // when entering long press state, turn on the length display
             turnOnCurrentLength(lengthPosition);
         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
@@ -99,7 +99,7 @@ function handleButtonReleased() {
         //         });
         // }
     }
-    led.off();
+    // led.off();
     // lengthDisplay[lengthPosition].off();
     clearTimeout(timer);
 }
