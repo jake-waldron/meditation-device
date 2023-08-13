@@ -59,7 +59,6 @@ function handleButtonPushed() {
     // timer gets cleared on every button release, if it runs, enter/exit long press state
     timer = setTimeout(() => {
         longPressState = !longPressState;
-        // longPressLED.write(longPressState);
         if ( longPressState === true ) { // when entering long press state, turn on the length display
             turnOnCurrentLength(lengthPosition);
         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
@@ -80,16 +79,16 @@ function handleButtonReleased() {
         console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
         // if ( audioPlaying === false ) {
         //     audioPlaying = true;
-        //     lengthDisplay[lengthPosition].on();
+        //     turnOnCurrentLength(lengthPosition);
         //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
         //         .then(() => {
         //             audioPlaying = false;
-        //             lengthDisplay[lengthPosition].off();
+        //             turnOffLengthDisplay();
         //         })
         //         .catch((error) => {
         //             console.log(error);
         //             audioPlaying = false;
-        //             lengthDisplay[lengthPosition].off();
+        //             turnOffLengthDisplay();
         //         });
         // }
     }
