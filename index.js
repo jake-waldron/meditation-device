@@ -60,7 +60,7 @@ if ( system === "raspPi" ) {
             if ( currentButtonState === false ) {
 
                 if ( longPressState === true ) { // if inside long press state
-                    // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
+                    lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
 
                 } else { // regular press
                     led.on();
@@ -77,11 +77,20 @@ if ( system === "raspPi" ) {
                     }
                     longPressState = !longPressState;
                     longPressLED.write(longPressState);
+                    if ( longPressState === true ) { // when entering long press state, turn on the length display
+                        lengthDisplay.forEach((pin, index) => {
+                            if ( index === lengthPosition ) {
+                                pin.on();
+                            } else {
+                                pin.off();
+                            }
+                        });
+                    } else { // make sure all length pins are off
+                        lengthDisplay.forEach((pin) => {
+                            pin.off();
+                        });
+                    }
 
-                    // make sure all length pins are off
-                    lengthDisplay.forEach((pin) => {
-                        pin.write(0);
-                    });
                     console.log(`Current Length: ${lengths[lengthPosition]}`);
                 }, longPressTime);
 
