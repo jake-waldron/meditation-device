@@ -88,7 +88,7 @@ if ( system === "raspPi" ) {
                 // button released
             } else if ( currentButtonState === true ) {
                 if ( longPressState && !releasingLongPress ) { // button released inside long press
-                    lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
+                    // lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
                     console.log(`Set to: ${lengths[lengthPosition]}`);
                     lengthDisplay.forEach((pin, index) => {
                         if ( index === lengthPosition ) {
