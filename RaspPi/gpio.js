@@ -62,6 +62,7 @@ function handleButtonPushed() {
         lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
     } else { // regular press
         led.on();
+        lengthDisplay[lengthPosition].on();
     }
 
     // timer gets cleared on every button release, if it runs, enter/exit long press state
@@ -103,6 +104,7 @@ function handleButtonReleased() {
         // }
     }
     led.off();
+    lengthDisplay[lengthPosition].off();
     clearTimeout(timer);
 }
 
