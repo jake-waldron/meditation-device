@@ -16,10 +16,10 @@ export function removeMp3Files() {
 
 export const promisifyExec = utils.promisify(exec);
 
-export const meditationDurations = {
-    0 : "3min",
-    1 : "5min",
-    2 : "10min",
-    3 : "15min",
-    4 : "20min",
-};
+export const meditationDurations = [
+    "3min",
+    "5min",
+    "10min",
+    "15min",
+    "20min",
+];

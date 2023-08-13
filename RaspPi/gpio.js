@@ -1,4 +1,5 @@
 import gpio from "array-gpio";
+import { meditationDurations } from "../utils.js";
 
 let audioPlaying = false;
 
@@ -19,7 +20,6 @@ const lengthDisplayPins = { pin : [ 38, 37, 36, 35, 33 ] };
 const lengthDisplay = gpio.setOutput(lengthDisplayPins);
 
 let lengthPosition = 0;
-const lengths = [ "3min", "5min", "10min", "15min", "20min" ];
 
 
 async function buttonHandler(state) {
@@ -59,7 +59,7 @@ function turnOffLengthDisplay() {
 
 function handleButtonPushed() {
     if ( longPressState === true ) { // if inside long press state
-        lengthPosition < lengths.length - 1 ? lengthPosition++ : lengthPosition = 0;
+        lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
     } else { // regular press
         led.on();
         // lengthDisplay[lengthPosition].on();
@@ -73,7 +73,7 @@ function handleButtonPushed() {
             turnOnCurrentLength(lengthPosition);
         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
             turnOffLengthDisplay();
-            lengthPosition <= 0 ? lengthPosition = lengths.length - 1 : lengthPosition--;
+            lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
             releasingLongPress = true;
         }
     }, longPressTime);
@@ -86,7 +86,7 @@ function handleButtonReleased() {
     if ( releasingLongPress ) { // button released after exiting long press
         releasingLongPress = false;
     } else if ( !longPressState && !releasingLongPress ) {
-        console.log(`Start ${lengths[lengthPosition]} Meditation`);
+        console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
         // if ( audioPlaying === false ) {
         //     audioPlaying = true;
         //     playMp3RaspPi(`./audio/${lengths[lengthPosition]}.mp3`)
