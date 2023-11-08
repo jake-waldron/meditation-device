@@ -96,6 +96,19 @@ function handleButtonReleased() {
     clearTimeout(timer);
 }
 
+//isSelectingLength = false;
+// if selecting length = false - regular button push handling
+// short press - start meditation
+// long press - start selecting length
+// if selecting length = true - length button push handling
+// short press - select next length
+// long press - exit selecting length
+// if playing = true - button push handling
+// short press - pause
+// long press - stop
+//handle buttom push
+//
+
 export default function setupPi() {
     button.watch(buttonHandler);
 }
