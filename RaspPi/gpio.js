@@ -8,8 +8,12 @@ const button = gpio.setInput(40);
 button.setR("pu");
 let currentButtonState = null;
 let lastButtonState = true;
+
+let isSelectingLength = false;
+
 let longPressState = false;
 let releasingLongPress = false;
+
 let timer = null;
 const longPressTime = 500;
 
@@ -22,15 +26,25 @@ async function buttonHandler(state) {
     currentButtonState = state;
 
     if ( currentButtonState !== lastButtonState ) {
-        // button pushed
-        if ( currentButtonState === false ) {
-            handleButtonPushed();
-            // button released
-        } else if ( currentButtonState === true ) {
-            handleButtonReleased();
-        }
+        handleButton(currentButtonState);
     }
     lastButtonState = currentButtonState;
+}
+
+function handleButton(currentButtonState) {
+    if ( currentButtonState === false ) { // button pushed
+        handleButtonPushed();
+        if ( !isSelectingLength && !audioPlaying ) {
+            // handle button push(short, long) for meditation start (play, or go into length selection)
+        } else if ( isSelectingLength ) {
+            // handle button push(short, long) for length selection (select next length, or exit length selection)
+        } else if ( audioPlaying ) {
+            // handle button push(short, long) for pause/stop (pause, or stop)
+        }
+
+    } else if ( currentButtonState === true ) {   // button released
+        handleButtonReleased();
+    }
 }
 
 function turnOnCurrentLength(lengthPosition) {
@@ -49,12 +63,13 @@ function turnOffLengthDisplay() {
     });
 }
 
-function handleButtonPushed() {
-    if ( longPressState === true ) { // if inside long press state
-        lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
+function handleButtonPushed(short, long) {
+    if ( !longPressState ) { // if inside long press state
+        long();
     } else { // regular press
         // this is *every* button push, including long press
         // so don't put something here if you don't want it to run on long press
+        short();
     }
 
     // timer gets cleared on every button release, if it runs, enter/exit long press state
@@ -70,13 +85,34 @@ function handleButtonPushed() {
     }, longPressTime);
 }
 
+// function handleButtonPushed() {
+//     if ( longPressState === true ) { // if inside long press state
+//         lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
+//     } else { // regular press
+//         // this is *every* button push, including long press
+//         // so don't put something here if you don't want it to run on long press
+//     }
+//
+//     // timer gets cleared on every button release, if it runs, enter/exit long press state
+//     timer = setTimeout(() => {
+//         longPressState = !longPressState;
+//         if ( longPressState === true ) { // when entering long press state, turn on the length display
+//             turnOnCurrentLength(lengthPosition);
+//         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
+//             turnOffLengthDisplay();
+//             lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
+//             releasingLongPress = true;
+//         }
+//     }, longPressTime);
+// }
+
 function handleButtonReleased() {
     if ( longPressState && !releasingLongPress ) { // button released inside long press
         turnOnCurrentLength(lengthPosition);
     }
     if ( releasingLongPress ) { // button released after exiting long press
         releasingLongPress = false;
-    } else if ( !longPressState && !releasingLongPress ) {
+    } else if ( !longPressState && !releasingLongPress ) { // regular button release
         console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
         if ( audioPlaying === false ) {
             audioPlaying = true;
@@ -98,14 +134,14 @@ function handleButtonReleased() {
 
 //isSelectingLength = false;
 // if selecting length = false - regular button push handling
-// short press - start meditation
-// long press - start selecting length
+//      short press - start meditation
+//      long press - start selecting length
 // if selecting length = true - length button push handling
-// short press - select next length
-// long press - exit selecting length
+//      short press - select next length
+//      long press - exit selecting length
 // if playing = true - button push handling
-// short press - pause
-// long press - stop
+//      short press - pause
+//      long press - stop
 //handle buttom push
 //
 
