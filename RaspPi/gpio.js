@@ -125,7 +125,7 @@ function startPlayingMeditation() {
     console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
     // if ( audioPlaying === false ) {
     //     audioPlaying = true;
-    turnOnCurrentLength(lengthPosition);
+    turnOnCurrentLength(lengthDisplay, lengthPosition);
     //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
     //         .then(() => {
     //             audioPlaying = false;
