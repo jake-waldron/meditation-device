@@ -28,6 +28,7 @@ async function buttonHandler(state) {
             case "idle": {
                 function onShortPress() {
                     startPlayingMeditation();
+                    deviceState = "playing";
                 }
 
                 function onLongPress() {
