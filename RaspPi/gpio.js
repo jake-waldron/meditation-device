@@ -67,6 +67,7 @@ async function buttonHandler(state) {
                 function onLongPress() {
                     // stop
                     console.log("STOP");
+                    turnOffLengthDisplay(lengthDisplay);
                     deviceState = "idle";
                 }
 
@@ -85,6 +86,7 @@ async function buttonHandler(state) {
                 function onLongPress() {
                     // stop
                     console.log("STOP");
+                    turnOffLengthDisplay(lengthDisplay);
                     deviceState = "idle";
                 }
 
@@ -123,7 +125,7 @@ function startPlayingMeditation() {
     console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
     // if ( audioPlaying === false ) {
     //     audioPlaying = true;
-    //     turnOnCurrentLength(lengthPosition);
+    turnOnCurrentLength(lengthPosition);
     //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
     //         .then(() => {
     //             audioPlaying = false;
