@@ -47,7 +47,7 @@ async function buttonHandler(state) {
 
                 function onLongPress() {
                     turnOffLengthDisplay(lengthDisplay);
-                    lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
+                    // lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
                     deviceState = "idle";
                 }
 
@@ -98,6 +98,7 @@ async function buttonHandler(state) {
 
 function handleButton(currentButtonState, short, long) {
     if ( currentButtonState === false ) { // button pushed
+        console.log("STATE WHEN PUSHED: ", deviceState);
         timer = setTimeout(() => {
             // if it runs, it's a long press. do long press stuff. tell the button handler that the last press was a long press
             long();
@@ -105,6 +106,7 @@ function handleButton(currentButtonState, short, long) {
         }, longPressTime);
 
     } else if ( currentButtonState === true ) {   // button released
+        console.log("STATE WHEN RELEASED: ", deviceState);
         clearTimeout(timer); // clear the timer, if it hasn't run yet, it won't
         if ( lastPressWasLong ) { // if the last press was a long press, don't do short press stuff
             lastPressWasLong = false;
