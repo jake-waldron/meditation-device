@@ -48,7 +48,6 @@ async function buttonHandler(state) {
 
                 function onLongPress() {
                     turnOffLengthDisplay(lengthDisplay);
-                    // lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
                     deviceState = "idle";
                 }
 
@@ -60,15 +59,15 @@ async function buttonHandler(state) {
             case "playing": {
                 function onShortPress() {
                     // pause
-                    console.log("PAUSE");
                     deviceState = "paused";
+                    console.log("PAUSE");
                 }
 
                 function onLongPress() {
                     // stop
+                    deviceState = "idle";
                     console.log("STOP");
                     turnOffLengthDisplay(lengthDisplay);
-                    deviceState = "idle";
                 }
 
                 handleButton(currentButtonState, onShortPress, onLongPress);
@@ -79,15 +78,15 @@ async function buttonHandler(state) {
             case "paused": {
                 function onShortPress() {
                     // resume
-                    console.log("RESUME");
                     deviceState = "playing";
+                    console.log("RESUME");
                 }
 
                 function onLongPress() {
                     // stop
+                    deviceState = "idle";
                     console.log("STOP");
                     turnOffLengthDisplay(lengthDisplay);
-                    deviceState = "idle";
                 }
 
                 handleButton(currentButtonState, onShortPress, onLongPress);
