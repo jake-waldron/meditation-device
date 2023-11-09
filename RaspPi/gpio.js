@@ -1,149 +1,139 @@
 import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
-import playMp3RaspPi from "./audioFunctions.js";
+import { turnOffLengthDisplay, turnOnCurrentLength } from "./ledUtils.js";
 
-let audioPlaying = false;
 
 const button = gpio.setInput(40);
 button.setR("pu");
 let currentButtonState = null;
 let lastButtonState = true;
 
-let isSelectingLength = false;
+let deviceState = "idle";
 
-let longPressState = false;
-let releasingLongPress = false;
+let lastPressWasLong = false;
 
 let timer = null;
 const longPressTime = 500;
 
 const lengthDisplayPins = { pin : [ 38, 37, 36, 35, 33 ] };
 const lengthDisplay = gpio.setOutput(lengthDisplayPins);
-
 let lengthPosition = 0;
+
 
 async function buttonHandler(state) {
     currentButtonState = state;
 
     if ( currentButtonState !== lastButtonState ) {
-        handleButton(currentButtonState);
+        switch (deviceState) {
+            case "idle": {
+                function onShortPress() {
+                    startPlayingMeditation();
+                }
+
+                function onLongPress() {
+                    turnOnCurrentLength(lengthDisplay, lengthPosition);
+                    deviceState = "selectingLength";
+                }
+
+                handleButton(currentButtonState, onShortPress, onLongPress);
+                break;
+            }
+
+            case "selectingLength": {
+                function onShortPress() {
+                    lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
+                    turnOnCurrentLength(lengthDisplay, lengthPosition);
+                }
+
+                function onLongPress() {
+                    turnOffLengthDisplay(lengthDisplay);
+                    lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
+                    deviceState = "idle";
+                }
+
+                handleButton(currentButtonState, onShortPress, onLongPress);
+                break;
+            }
+
+
+            case "playing": {
+                function onShortPress() {
+                    // pause
+                    console.log("PAUSE");
+                    deviceState = "paused";
+                }
+
+                function onLongPress() {
+                    // stop
+                    console.log("STOP");
+                    deviceState = "idle";
+                }
+
+                handleButton(currentButtonState, onShortPress, onLongPress);
+                break;
+            }
+
+
+            case "paused": {
+                function onShortPress() {
+                    // resume
+                    console.log("RESUME");
+                    deviceState = "playing";
+                }
+
+                function onLongPress() {
+                    // stop
+                    console.log("STOP");
+                    deviceState = "idle";
+                }
+
+                handleButton(currentButtonState, onShortPress, onLongPress);
+                break;
+            }
+
+        }
     }
     lastButtonState = currentButtonState;
 }
 
-function handleButton(currentButtonState) {
+function handleButton(currentButtonState, short, long) {
     if ( currentButtonState === false ) { // button pushed
-        handleButtonPushed();
-        if ( !isSelectingLength && !audioPlaying ) {
-            // handle button push(short, long) for meditation start (play, or go into length selection)
-        } else if ( isSelectingLength ) {
-            // handle button push(short, long) for length selection (select next length, or exit length selection)
-        } else if ( audioPlaying ) {
-            // handle button push(short, long) for pause/stop (pause, or stop)
-        }
+        timer = setTimeout(() => {
+            // if it runs, it's a long press. do long press stuff. tell the button handler that the last press was a long press
+            long();
+            lastPressWasLong = true;
+        }, longPressTime);
 
     } else if ( currentButtonState === true ) {   // button released
-        handleButtonReleased();
-    }
-}
-
-function turnOnCurrentLength(lengthPosition) {
-    lengthDisplay.forEach((pin, index) => {
-        if ( index === lengthPosition ) {
-            pin.on();
-        } else {
-            pin.off();
+        clearTimeout(timer); // clear the timer, if it hasn't run yet, it won't
+        if ( lastPressWasLong ) { // if the last press was a long press, don't do short press stuff
+            lastPressWasLong = false;
+            return;
         }
-    });
-}
-
-function turnOffLengthDisplay() {
-    lengthDisplay.forEach((pin) => {
-        pin.off();
-    });
-}
-
-function handleButtonPushed(short, long) {
-    if ( !longPressState ) { // if inside long press state
-        long();
-    } else { // regular press
-        // this is *every* button push, including long press
-        // so don't put something here if you don't want it to run on long press
+        // if it runs, it's a short press. do short press stuff
         short();
     }
-
-    // timer gets cleared on every button release, if it runs, enter/exit long press state
-    timer = setTimeout(() => {
-        longPressState = !longPressState;
-        if ( longPressState === true ) { // when entering long press state, turn on the length display
-            turnOnCurrentLength(lengthPosition);
-        } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
-            turnOffLengthDisplay();
-            lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
-            releasingLongPress = true;
-        }
-    }, longPressTime);
 }
 
-// function handleButtonPushed() {
-//     if ( longPressState === true ) { // if inside long press state
-//         lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
-//     } else { // regular press
-//         // this is *every* button push, including long press
-//         // so don't put something here if you don't want it to run on long press
-//     }
-//
-//     // timer gets cleared on every button release, if it runs, enter/exit long press state
-//     timer = setTimeout(() => {
-//         longPressState = !longPressState;
-//         if ( longPressState === true ) { // when entering long press state, turn on the length display
-//             turnOnCurrentLength(lengthPosition);
-//         } else { // when exiting, make sure all length pins are off, and negate the lengthPosition change from that push
-//             turnOffLengthDisplay();
-//             lengthPosition <= 0 ? lengthPosition = meditationDurations.length - 1 : lengthPosition--;
-//             releasingLongPress = true;
-//         }
-//     }, longPressTime);
-// }
 
-function handleButtonReleased() {
-    if ( longPressState && !releasingLongPress ) { // button released inside long press
-        turnOnCurrentLength(lengthPosition);
-    }
-    if ( releasingLongPress ) { // button released after exiting long press
-        releasingLongPress = false;
-    } else if ( !longPressState && !releasingLongPress ) { // regular button release
-        console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
-        if ( audioPlaying === false ) {
-            audioPlaying = true;
-            turnOnCurrentLength(lengthPosition);
-            playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
-                .then(() => {
-                    audioPlaying = false;
-                    turnOffLengthDisplay();
-                })
-                .catch((error) => {
-                    console.log(error);
-                    audioPlaying = false;
-                    turnOffLengthDisplay();
-                });
-        }
-    }
-    clearTimeout(timer);
+function startPlayingMeditation() {
+    console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
+    // if ( audioPlaying === false ) {
+    //     audioPlaying = true;
+    //     turnOnCurrentLength(lengthPosition);
+    //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
+    //         .then(() => {
+    //             audioPlaying = false;
+    //             turnOffLengthDisplay(lengthDisplay);
+    //         })
+    //         .catch((error) => {
+    //             console.log(error);
+    //             audioPlaying = false;
+    //             turnOffLengthDisplay(lengthDisplay);
+    //         });
+    // }
 }
 
-//isSelectingLength = false;
-// if selecting length = false - regular button push handling
-//      short press - start meditation
-//      long press - start selecting length
-// if selecting length = true - length button push handling
-//      short press - select next length
-//      long press - exit selecting length
-// if playing = true - button push handling
-//      short press - pause
-//      long press - stop
-//handle buttom push
-//
 
 export default function setupPi() {
     button.watch(buttonHandler);
