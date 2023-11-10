@@ -1,6 +1,7 @@
 import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
 import { turnOffLengthDisplay, turnOnCurrentLength } from "./ledUtils.js";
+import playMp3RaspPi from "./audioFunctions.js";
 
 
 const button = gpio.setInput(40);
@@ -125,16 +126,16 @@ function startPlayingMeditation() {
     // if ( audioPlaying === false ) {
     //     audioPlaying = true;
     turnOnCurrentLength(lengthDisplay, lengthPosition);
-    //     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
-    //         .then(() => {
-    //             audioPlaying = false;
-    //             turnOffLengthDisplay(lengthDisplay);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //             audioPlaying = false;
-    //             turnOffLengthDisplay(lengthDisplay);
-    //         });
+    playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
+        .then(() => {
+            deviceState = "idle";
+            turnOffLengthDisplay(lengthDisplay);
+        })
+        .catch((error) => {
+            console.log(error);
+            deviceState = "idle";
+            turnOffLengthDisplay(lengthDisplay);
+        });
     // }
 }
 
