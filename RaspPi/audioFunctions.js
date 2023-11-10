@@ -35,7 +35,7 @@ export default async function playMp3RaspPi(mp3FileName) {
         // Delay so that the bluetooth connected voice shuts up before playing mp3
         await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        const child = exec(`mpg321 -g 50 ${mp3FileName}`, (error) => {
+        const child = exec(`mpg321 -R -g 50 ${mp3FileName}`, (error) => {
             if ( error ) {
                 console.error("Failed to stream audio:", error);
                 exec("bluetoothctl disconnect");
