@@ -60,6 +60,7 @@ async function buttonHandler(state) {
             case "playing": {
                 function onShortPress() {
                     // pause
+                    exec("p");
                     deviceState = "paused";
                     console.log("PAUSE");
                 }
@@ -79,6 +80,7 @@ async function buttonHandler(state) {
             case "paused": {
                 function onShortPress() {
                     // resume
+                    exec("p");
                     deviceState = "playing";
                     console.log("RESUME");
                 }
