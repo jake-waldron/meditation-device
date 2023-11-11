@@ -2,6 +2,7 @@ import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
 import { turnOffLengthDisplay, turnOnCurrentLength } from "./ledUtils.js";
 import playMp3RaspPi from "./audioFunctions.js";
+import { exec } from "child_process";
 
 
 const button = gpio.setInput(40);
