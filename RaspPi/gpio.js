@@ -1,8 +1,7 @@
 import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
 import { turnOffLengthDisplay, turnOnCurrentLength } from "./ledUtils.js";
-import playMp3RaspPi from "./audioFunctions.js";
-import { exec } from "child_process";
+import { pauseMp3RaspPi, playMp3RaspPi, stopMp3RaspPi } from "./audioFunctions.js";
 
 
 const button = gpio.setInput(40);
@@ -61,7 +60,7 @@ async function buttonHandler(state) {
             case "playing": {
                 function onShortPress() {
                     // pause
-                    exec("p");
+                    pauseMp3RaspPi();
                     deviceState = "paused";
                     console.log("PAUSE");
                 }
@@ -70,6 +69,7 @@ async function buttonHandler(state) {
                     // stop
                     deviceState = "idle";
                     console.log("STOP");
+                    stopMp3RaspPi();
                     turnOffLengthDisplay(lengthDisplay);
                 }
 
@@ -81,7 +81,7 @@ async function buttonHandler(state) {
             case "paused": {
                 function onShortPress() {
                     // resume
-                    exec("p");
+                    pauseMp3RaspPi();
                     deviceState = "playing";
                     console.log("RESUME");
                 }
@@ -89,6 +89,7 @@ async function buttonHandler(state) {
                 function onLongPress() {
                     // stop
                     deviceState = "idle";
+                    stopMp3RaspPi();
                     console.log("STOP");
                     turnOffLengthDisplay(lengthDisplay);
                 }

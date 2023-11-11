@@ -1,5 +1,8 @@
 import { exec } from "child_process";
 import { promisifyExec } from "../utils.js";
+import mpg321 from "mpg321";
+
+const player = mpg321().remote;
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 async function checkBluetoothConnection() {
@@ -22,7 +25,7 @@ async function checkBluetoothConnection() {
 }
 
 // Function to play the MP3 file from the given URL
-export default async function playMp3RaspPi(mp3FileName) {
+export async function playMp3RaspPi(mp3FileName) {
     const isConnected = await checkBluetoothConnection();
 
     return new Promise(async (resolve, reject) => {
@@ -35,25 +38,50 @@ export default async function playMp3RaspPi(mp3FileName) {
         // Delay so that the bluetooth connected voice shuts up before playing mp3
         await new Promise((resolve) => setTimeout(resolve, 5000));
 
-        const child = exec(`mpg321 -R -g 50 ${mp3FileName}`, (error) => {
-            if ( error ) {
-                console.error("Failed to stream audio:", error);
-                exec("bluetoothctl disconnect");
-                reject(error);
-            }
-        });
-
-        child.on("close", (code) => {
-            if ( code !== 0 ) {
-                console.error("Audio playback failed with exit code:", code);
-                exec("bluetoothctl disconnect");
-                reject(new Error(`Audio playback failed with exit code: ${code}`));
-            }
-
+        player.play(mp3FileName);
+        player.on("end", () => {
             console.log("Audio streamed successfully!");
 
-            exec("bluetoothctl disconnect");
+            stopMp3RaspPi();
             resolve();
         });
+        player.on("error", (error) => {
+            console.error("Audio playback failed with exit code:", error);
+            stopMp3RaspPi();
+            reject(new Error(`Audio playback failed with exit code: ${error}`));
+        });
+        // const child = exec(`mpg321 -R -g 50 ${mp3FileName}`, (error) => {
+        //     if ( error ) {
+        //         console.error("Failed to stream audio:", error);
+        //         exec("bluetoothctl disconnect");
+        //         reject(error);
+        //     }
+        // });
+        //
+        // child.on("close", (code) => {
+        //     if ( code !== 0 ) {
+        //         console.error("Audio playback failed with exit code:", code);
+        //         exec("bluetoothctl disconnect");
+        //         reject(new Error(`Audio playback failed with exit code: ${code}`));
+        //     }
+        //
+        //     console.log("Audio streamed successfully!");
+        //
+        //     exec("bluetoothctl disconnect");
+        //     resolve();
+        // });
     });
+}
+
+export function pauseMp3RaspPi() {
+    player.pause();
+}
+
+export function resumeMp3RaspPi() {
+    player.pause();
+}
+
+export function stopMp3RaspPi() {
+    player.quit();
+    exec("bluetoothctl disconnect");
 }
