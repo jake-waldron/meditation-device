@@ -84,6 +84,6 @@ export function resumeMp3RaspPi() {
 }
 
 export function stopMp3RaspPi() {
-    player.quit();
+    player.stop();
     exec("bluetoothctl disconnect");
 }
