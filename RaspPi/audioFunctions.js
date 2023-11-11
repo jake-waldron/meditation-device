@@ -52,26 +52,7 @@ export async function playMp3RaspPi(mp3FileName) {
             stopMp3RaspPi();
             reject(new Error(`Audio playback failed with exit code: ${error}`));
         });
-        // const child = exec(`mpg321 -R -g 50 ${mp3FileName}`, (error) => {
-        //     if ( error ) {
-        //         console.error("Failed to stream audio:", error);
-        //         exec("bluetoothctl disconnect");
-        //         reject(error);
-        //     }
-        // });
-        //
-        // child.on("close", (code) => {
-        //     if ( code !== 0 ) {
-        //         console.error("Audio playback failed with exit code:", code);
-        //         exec("bluetoothctl disconnect");
-        //         reject(new Error(`Audio playback failed with exit code: ${code}`));
-        //     }
-        //
-        //     console.log("Audio streamed successfully!");
-        //
-        //     exec("bluetoothctl disconnect");
-        //     resolve();
-        // });
+
     });
 }
 
