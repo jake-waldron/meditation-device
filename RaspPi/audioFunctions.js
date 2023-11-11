@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import { promisifyExec } from "../utils.js";
 import mpg321 from "mpg321";
 
-const player = mpg321().remote;
+const player = mpg321().remote();
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
 async function checkBluetoothConnection() {
