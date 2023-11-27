@@ -1,33 +1,34 @@
 import ws281x from "rpi-ws281x-native";
 
 let channel;
+let strip;
 
 export function init() {
     channel = ws281x(5, { stripType : "ws2812" });
+    strip = channel.array;
+
 }
 
 export function turnOnDisplay() {
-    const colorArray = channel.array;
     for (let i = 0; i < channel.count; i++) {
-        colorArray[i] = 0xffcc22;
+        strip[i] = 0xffcc22;
     }
-
     ws281x.render();
 
 }
 
 export function turnOnCurrentLength(lengthDisplay, lengthPosition) {
-    lengthDisplay.forEach((pin, index) => {
+    strip.forEach((pin, index) => {
         if ( index === lengthPosition ) {
-            pin.on();
+            strip[index] = 0xFF0000;
         } else {
-            pin.off();
+            strip[index] = 0x000000;
         }
     });
 }
 
 export function turnOffLengthDisplay(lengthDisplay) {
-    lengthDisplay.forEach((pin) => {
-        pin.off();
+    strip.forEach((pin, index) => {
+        strip[index] = 0x000000;
     });
 }
