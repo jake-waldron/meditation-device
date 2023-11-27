@@ -4,7 +4,16 @@ let channel;
 let strip;
 
 export function init() {
-    channel = ws281x(5, { stripType : "ws2812" });
+    const options = {
+        dma : 10,
+        freq : 800000,
+        gpio : 12,
+        invert : false,
+        brightness : 200,
+        stripType : ws281x.stripType.WS2812,
+    };
+
+    channel = ws281x(5, options);
     strip = channel.array;
 
 }
