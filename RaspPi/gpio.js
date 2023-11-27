@@ -1,6 +1,6 @@
 import gpio from "array-gpio";
 import { meditationDurations } from "../utils.js";
-import { turnOffLengthDisplay, turnOnCurrentLength } from "./ledUtils.js";
+import { turnOffLengthDisplay, turnOnCurrentLength } from "./led.js";
 import { pauseMp3RaspPi, playMp3RaspPi, stopMp3RaspPi } from "./audioFunctions.js";
 
 

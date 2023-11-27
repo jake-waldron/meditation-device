@@ -1,10 +1,11 @@
 {
-	"dependencies": {
-		"array-gpio": "^1.7.2",
-		"dotenv": "^16.3.1",
-		"jsonwebtoken": "^9.0.1",
-		"mpg321": "^0.1.5",
-		"node-cron": "^3.0.2"
-	},
-	"type": "module"
+  "dependencies": {
+    "array-gpio": "^1.7.2",
+    "dotenv": "^16.3.1",
+    "jsonwebtoken": "^9.0.1",
+    "mpg321": "^0.1.5",
+    "node-cron": "^3.0.2",
+    "rpi-ws281x-native": "^1.0.4"
+  },
+  "type": "module"
 }
