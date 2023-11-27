@@ -25,10 +25,12 @@ export function turnOnCurrentLength(lengthDisplay, lengthPosition) {
             strip[index] = 0x000000;
         }
     });
+    ws281x.render();
 }
 
 export function turnOffLengthDisplay(lengthDisplay) {
     strip.forEach((pin, index) => {
         strip[index] = 0x000000;
     });
+    ws281x.render();
 }
