@@ -60,10 +60,6 @@ export function pauseMp3RaspPi() {
     player.pause();
 }
 
-export function resumeMp3RaspPi() {
-    player.pause();
-}
-
 export function stopMp3RaspPi() {
     player.stop();
     exec("bluetoothctl disconnect");
