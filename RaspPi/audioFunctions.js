@@ -4,6 +4,7 @@ import mpg321 from "mpg321";
 
 const player = mpg321().remote();
 
+player.options("-b 8192");
 player.gain(50);
 
 // Function to check if Raspberry Pi is connected to Bluetooth headphones
