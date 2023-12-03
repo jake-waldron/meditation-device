@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import { promisifyExec } from "../utils.js";
 import mpg321 from "mpg321";
 
-const player = mpg321([ "-g 50" ]).remote();
+const player = mpg321().remote();
 
 // player.gain(50);
 
