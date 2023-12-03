@@ -23,7 +23,7 @@ let lengthPosition = 0;
 
 async function buttonHandler(state) {
     currentButtonState = state;
-
+    console.log("button pushed");
     if ( currentButtonState !== lastButtonState ) {
         switch (deviceState) {
             case "idle": {

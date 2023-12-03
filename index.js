@@ -5,7 +5,7 @@ import { removeMp3Files } from "./utils.js";
 import getAuth from "./auth.js";
 import downloadTodaysMeditations from "./download.js";
 import { schedule } from "node-cron";
-import { init } from "./RaspPi/led.js";
+import { init, turnOnDisplay } from "./RaspPi/led.js";
 
 dotenv.config();
 
@@ -33,6 +33,7 @@ const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
 if ( system === "raspPi" ) {
     setupPi();
+    turnOnDisplay();
 }
 
 // -------------- Mac Stuff ----------------
