@@ -53,10 +53,27 @@ export function turnOffLengthDisplay() {
     sendLEDData(strip);
 }
 
-function sendLEDData(ledDataList) {
-    console.log({ ledDataList });
-    const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+// function sendLEDData(ledDataList) {
+//     console.log({ ledDataList });
+//     const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+//
+//     const sendData = [];
+//
+//     for (let i = 0; i < NUM_LEDS; i++) {
+//         const ledData = ledDataList[i];
+//         sendData.push(ledData.status ? 1 : 0); // LED on/off status
+//         sendData.push(ledData.red); // Red component of color
+//         sendData.push(ledData.green); // Green component of color
+//         sendData.push(ledData.blue); // Blue component of color
+//     }
+//
+//     const buffer = Buffer.from(sendData);
+//     bus.i2cWriteSync(I2C_ADDRESS, buffer.length, buffer);
+// }
 
+const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+
+function sendLEDData(ledDataList) {
     const sendData = [];
 
     for (let i = 0; i < NUM_LEDS; i++) {
@@ -70,3 +87,13 @@ function sendLEDData(ledDataList) {
     const buffer = Buffer.from(sendData);
     bus.i2cWriteSync(I2C_ADDRESS, buffer.length, buffer);
 }
+
+// Example usage: Set the desired LED status and color
+const ledDataList = [
+    { status : 0, red : 255, green : 0, blue : 0 }, // LED 1: On, Red color
+    { status : 0, red : 0, green : 255, blue : 0 }, // LED 2: Off, Green color
+    { status : 0, red : 0, green : 0, blue : 255 }, // LED 3: On, Blue color
+    { status : 0, red : 255, green : 255, blue : 0 }, // LED 4: Off, Yellow color
+    { status : 0, red : 255, green : 255, blue : 255 }, // LED 5: On, White color
+];
+sendLEDData(ledDataList);
