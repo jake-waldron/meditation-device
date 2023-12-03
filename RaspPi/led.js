@@ -37,7 +37,7 @@ function sendLEDData(ledDataList) {
 
     for (let i = 0; i < NUM_LEDS; i++) {
         const ledData = ledDataList[i];
-        sendData.push(ledData.status ? 1 : 0); // LED on/off status
+        // sendData.push(ledData.status ? 1 : 0); // LED on/off status
         sendData.push(ledData.red); // Red component of color
         sendData.push(ledData.green); // Green component of color
         sendData.push(ledData.blue); // Blue component of color
