@@ -1,14 +1,20 @@
-import i2c from "i2c-bus";
+import gpio from "array-gpio";
+
 
 const I2C_ADDRESS = 0x08; // I2C address of the ESP32
 const NUM_LEDS = 5;
+
+const bus = gpio.startI2C(); // Opens the I2C bus number (usually 1)
+bus.setTransferSpeed(100000);
+
+bus.selectSlave(I2C_ADDRESS);
 
 
 let strip = [];
 
 // make array of NUM_LEDS length with object of { status : 0, red : 0, green : 0, blue : 0 }, as each element
 for (let i = 0; i < NUM_LEDS; i++) {
-    strip.push({ status : 0, red : 0, green : 0, blue : 0 });
+    strip.push({ red : 0, green : 0, blue : 0 });
 }
 
 const COLORS = {
@@ -24,53 +30,35 @@ const COLORS = {
 
 export async function init() {
 
-    const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+}
 
-    function sendLEDData(ledDataList) {
-        return new Promise((resolve, reject) => {
-            const sendData = [];
-            for (let i = 0; i < NUM_LEDS; i++) {
-                const ledData = ledDataList[i];
-                sendData.push(ledData.status ? 1 : 0); // LED on/off status
-                sendData.push(ledData.red); // Red component of color
-                sendData.push(ledData.green); // Green component of color
-                sendData.push(ledData.blue); // Blue component of color
-            }
+function sendLEDData(ledDataList) {
+    const sendData = [];
 
-            bus.i2cWrite(I2C_ADDRESS, sendData.length, Buffer.from(sendData), (err) => {
-                if ( err ) {
-                    reject(err);
-                    return;
-                }
-                resolve();
-            });
-        });
+    for (let i = 0; i < NUM_LEDS; i++) {
+        const ledData = ledDataList[i];
+        sendData.push(ledData.status ? 1 : 0); // LED on/off status
+        sendData.push(ledData.red); // Red component of color
+        sendData.push(ledData.green); // Green component of color
+        sendData.push(ledData.blue); // Blue component of color
     }
 
-// Example usage: Set the desired LED status and color
-    const ledDataList = [
-        { status : true, red : 255, green : 0, blue : 0 }, // LED 1: On, Red color
-        { status : false, red : 0, green : 255, blue : 0 }, // LED 2: Off, Green color
-        { status : true, red : 0, green : 0, blue : 255 }, // LED 3: On, Blue color
-        { status : false, red : 255, green : 255, blue : 0 }, // LED 4: Off, Yellow color
-        { status : true, red : 255, green : 255, blue : 255 }, // LED 5: On, White color
-    ];
+    const buffer = Buffer.from(sendData);
+    const chunks = [];
 
-    sendLEDData(ledDataList)
-        .then(() => {
-            console.log("LED data sent successfully!");
-            bus.closeSync(); // Close the I2C bus
-        })
-        .catch((error) => {
-            console.error("Error sending LED data:", error);
-            bus.closeSync(); // Close the I2C bus
-        });
+    for (let i = 0; i < buffer.length; i += 16) {
+        chunks.push(buffer.slice(i, i + 16));
+    }
+
+    for (const chunk of chunks) {
+        bus.write(chunk, chunk.length);
+    }
 
 }
 
 export function turnOnDisplay() {
     for (let i = 0; i < NUM_LEDS; i++) {
-        strip[i] = { status : 1, ...COLORS.red };
+        strip[i] = { ...COLORS.red };
     }
     sendLEDData(strip);
 }
@@ -78,9 +66,9 @@ export function turnOnDisplay() {
 export function turnOnCurrentLength(lengthDisplay, lengthPosition) {
     strip.forEach((pin, index) => {
         if ( index === lengthPosition ) {
-            strip[index] = { status : 1, ...COLORS.green };
+            strip[index] = { ...COLORS.green };
         } else {
-            strip[index] = { status : 1, ...COLORS.red };
+            strip[index] = { ...COLORS.red };
         }
     });
     sendLEDData(strip);
@@ -89,7 +77,7 @@ export function turnOnCurrentLength(lengthDisplay, lengthPosition) {
 
 export function turnOffLengthDisplay() {
     strip.forEach((pin, index) => {
-        strip[index] = { status : 0, ...COLORS.off };
+        strip[index] = { ...COLORS.off };
     });
     sendLEDData(strip);
 }
