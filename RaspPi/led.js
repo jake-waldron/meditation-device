@@ -3,7 +3,7 @@ import i2c from "i2c-bus";
 const I2C_ADDRESS = 0x08; // I2C address of the ESP32
 const NUM_LEDS = 5;
 
-let strip = new Uint32Array(NUM_LEDS);
+let strip = [];
 
 // make array of NUM_LEDS length with object of { status : 0, red : 0, green : 0, blue : 0 }, as each element
 for (let i = 0; i < NUM_LEDS; i++) {
