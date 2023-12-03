@@ -3,7 +3,7 @@ import i2c from "i2c-bus";
 const I2C_ADDRESS = 0x08; // I2C address of the ESP32
 const NUM_LEDS = 5;
 
-bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
 
 let strip = [];
 
@@ -22,10 +22,9 @@ const COLORS = {
     purple : { red : 255, green : 0, blue : 255 },
 };
 
-let bus;
 
 export function init() {
-
+    console.log("init i2c");
 
 }
 
