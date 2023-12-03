@@ -3,7 +3,6 @@ import i2c from "i2c-bus";
 const I2C_ADDRESS = 0x08; // I2C address of the ESP32
 const NUM_LEDS = 5;
 
-const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
 
 let strip = [];
 
@@ -55,6 +54,8 @@ export function turnOffLengthDisplay() {
 }
 
 function sendLEDData(ledDataList) {
+    const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
+
     const sendData = [];
 
     for (let i = 0; i < NUM_LEDS; i++) {
