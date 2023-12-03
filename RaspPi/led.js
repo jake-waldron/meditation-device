@@ -54,6 +54,7 @@ export function turnOffLengthDisplay() {
 }
 
 function sendLEDData(ledDataList) {
+    console.log({ ledDataList });
     const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
 
     const sendData = [];

@@ -14,7 +14,7 @@ dotenv.config();
 try {
     removeMp3Files();
     const bearerToken = await getAuth();
-    await downloadTodaysMeditations(bearerToken);
+    // await downloadTodaysMeditations(bearerToken);
     init();
 } catch (error) {
     console.log(error);
