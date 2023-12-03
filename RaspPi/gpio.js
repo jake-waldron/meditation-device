@@ -16,14 +16,11 @@ let lastPressWasLong = false;
 let timer = null;
 const longPressTime = 500;
 
-const lengthDisplayPins = { pin : [ 38, 37, 36, 35, 33 ] };
-const lengthDisplay = gpio.setOutput(lengthDisplayPins);
 let lengthPosition = 0;
 
 
 async function buttonHandler(state) {
     currentButtonState = state;
-    console.log("button pushed");
     if ( currentButtonState !== lastButtonState ) {
         switch (deviceState) {
             case "idle": {

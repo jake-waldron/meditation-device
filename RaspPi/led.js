@@ -17,7 +17,6 @@ for (let i = 0; i < NUM_LEDS; i++) {
     strip.push({ red : 0, green : 0, blue : 0 });
 }
 
-console.log({ strip });
 
 const COLORS = {
     red : { red : 255, green : 0, blue : 0 },
@@ -34,8 +33,6 @@ function sendLEDData(ledDataList) {
 
     for (let i = 0; i < NUM_LEDS; i++) {
         const ledData = ledDataList[i];
-        console.log({ ledData });
-        // sendData.push(ledData.status ? 1 : 0); // LED on/off status
         sendData.push(ledData.red); // Red component of color
         sendData.push(ledData.green); // Green component of color
         sendData.push(ledData.blue); // Blue component of color
