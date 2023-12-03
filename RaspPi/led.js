@@ -26,6 +26,10 @@ export async function init() {
 
     const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
 
+    // Set the desired I2C clock speed. Adjust the value as necessary.
+    bus.i2cSetSync(1, false, 10000); // Set the clock speed to 10kHz (10000 Hz)
+
+
     function sendLEDData(ledDataList) {
         const sendData = [];
 
