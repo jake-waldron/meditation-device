@@ -17,6 +17,8 @@ for (let i = 0; i < NUM_LEDS; i++) {
     strip.push({ red : 0, green : 0, blue : 0 });
 }
 
+console.log({ strip });
+
 const COLORS = {
     red : { red : 255, green : 0, blue : 0 },
     green : { red : 0, green : 255, blue : 0 },

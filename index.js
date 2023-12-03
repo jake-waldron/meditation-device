@@ -33,7 +33,7 @@ const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
 if ( system === "raspPi" ) {
     setupPi();
-    // turnOnDisplay();
+    turnOnDisplay();
 }
 
 // -------------- Mac Stuff ----------------
