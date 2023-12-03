@@ -22,7 +22,7 @@ const COLORS = {
 };
 
 
-export function init() {
+export async function init() {
 
     const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
 
@@ -39,6 +39,8 @@ export function init() {
 
         const buffer = Buffer.from(sendData);
         bus.i2cWriteSync(I2C_ADDRESS, buffer.length, buffer);
+        bus.closeSync();
+
     }
 
 // Example usage: Set the desired LED status and color

@@ -5,7 +5,7 @@ import { removeMp3Files } from "./utils.js";
 import getAuth from "./auth.js";
 import downloadTodaysMeditations from "./download.js";
 import { schedule } from "node-cron";
-import { init, turnOnDisplay } from "./RaspPi/led.js";
+import { init } from "./RaspPi/led.js";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ try {
     removeMp3Files();
     // const bearerToken = await getAuth();
     // await downloadTodaysMeditations(bearerToken);
-    init();
+    await init();
 } catch (error) {
     console.log(error);
 }
@@ -33,7 +33,7 @@ const system = process.platform === "darwin" ? "macOS" : "raspPi";
 
 if ( system === "raspPi" ) {
     setupPi();
-    turnOnDisplay();
+    // turnOnDisplay();
 }
 
 // -------------- Mac Stuff ----------------
