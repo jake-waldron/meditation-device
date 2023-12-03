@@ -33,7 +33,7 @@ async function buttonHandler(state) {
                 }
 
                 function onLongPress() {
-                    turnOnCurrentLength(lengthDisplay, lengthPosition);
+                    turnOnCurrentLength(lengthPosition);
                     deviceState = "selectingLength";
                 }
 
@@ -44,11 +44,11 @@ async function buttonHandler(state) {
             case "selectingLength": {
                 function onShortPress() {
                     lengthPosition < meditationDurations.length - 1 ? lengthPosition++ : lengthPosition = 0;
-                    turnOnCurrentLength(lengthDisplay, lengthPosition);
+                    turnOnCurrentLength(lengthPosition);
                 }
 
                 function onLongPress() {
-                    turnOffLengthDisplay(lengthDisplay);
+                    turnOffLengthDisplay();
                     deviceState = "idle";
                 }
 
@@ -70,7 +70,7 @@ async function buttonHandler(state) {
                     deviceState = "idle";
                     console.log("STOP");
                     stopMp3RaspPi();
-                    turnOffLengthDisplay(lengthDisplay);
+                    turnOffLengthDisplay();
                 }
 
                 handleButton(currentButtonState, onShortPress, onLongPress);
@@ -91,7 +91,7 @@ async function buttonHandler(state) {
                     deviceState = "idle";
                     stopMp3RaspPi();
                     console.log("STOP");
-                    turnOffLengthDisplay(lengthDisplay);
+                    turnOffLengthDisplay();
                 }
 
                 handleButton(currentButtonState, onShortPress, onLongPress);
@@ -125,16 +125,16 @@ function handleButton(currentButtonState, short, long) {
 
 function startPlayingMeditation() {
     console.log(`Start ${meditationDurations[lengthPosition]} Meditation`);
-    turnOnCurrentLength(lengthDisplay, lengthPosition);
+    turnOnCurrentLength(lengthPosition);
     playMp3RaspPi(`./audio/${meditationDurations[lengthPosition]}.mp3`)
         .then(() => {
             deviceState = "idle";
-            turnOffLengthDisplay(lengthDisplay);
+            turnOffLengthDisplay();
         })
         .catch((error) => {
             console.log(error);
             deviceState = "idle";
-            turnOffLengthDisplay(lengthDisplay);
+            turnOffLengthDisplay();
         });
 }
 

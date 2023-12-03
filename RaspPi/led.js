@@ -29,11 +29,6 @@ const COLORS = {
     purple : { red : 255, green : 0, blue : 255 },
 };
 
-
-export async function init() {
-
-}
-
 function sendLEDData(ledDataList) {
     const sendData = [];
 
@@ -66,12 +61,12 @@ export function turnOnDisplay() {
     sendLEDData(strip);
 }
 
-export function turnOnCurrentLength(lengthDisplay, lengthPosition) {
+export function turnOnCurrentLength(lengthPosition) {
     strip.forEach((pin, index) => {
         if ( index === lengthPosition ) {
-            strip[index] = { ...COLORS.green };
+            strip[index] = { ...COLORS.blue };
         } else {
-            strip[index] = { ...COLORS.red };
+            strip[index] = { ...COLORS.purple };
         }
     });
     sendLEDData(strip);
@@ -84,22 +79,4 @@ export function turnOffLengthDisplay() {
     });
     sendLEDData(strip);
 }
-
-// function sendLEDData(ledDataList) {
-//     console.log({ ledDataList });
-//     const bus = i2c.openSync(1); // Opens the I2C bus number (usually 1)
-//
-//     const sendData = [];
-//
-//     for (let i = 0; i < NUM_LEDS; i++) {
-//         const ledData = ledDataList[i];
-//         sendData.push(ledData.status ? 1 : 0); // LED on/off status
-//         sendData.push(ledData.red); // Red component of color
-//         sendData.push(ledData.green); // Green component of color
-//         sendData.push(ledData.blue); // Blue component of color
-//     }
-//
-//     const buffer = Buffer.from(sendData);
-//     bus.i2cWriteSync(I2C_ADDRESS, buffer.length, buffer);
-// }
 
