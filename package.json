@@ -5,7 +5,7 @@
     "jsonwebtoken": "^9.0.1",
     "mpg321": "^0.1.5",
     "node-cron": "^3.0.2",
-    "rpi-ws281x-native": "^1.0.4"
+    "i2c-bus": "^5.2.0"
   },
   "type": "module"
 }
